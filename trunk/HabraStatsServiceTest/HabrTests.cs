@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Web.Script.Serialization;
 using HabraStatsService.Habra;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -12,8 +13,18 @@ namespace HabraStatsServiceTest
         public void TestGetPosts()
         {
             var h = new Habr();
-            var posts = h.GetRecentPosts(10).ToArray();
+            var posts = h.GetRecentPosts(10).OrderByDescending(p => p.Comments.Length).ToArray();
             Assert.AreEqual(posts.Length, 10);
+        }
+
+        [TestMethod]
+        public void TestSerialization()
+        {
+            var h = new Habr();
+            var post = h.GetRecentPosts(10).OrderByDescending(p => p.Comments.Length).FirstOrDefault();
+            var js = new JavaScriptSerializer();
+            var json = js.Serialize(post);
+            Assert.IsFalse(string.IsNullOrEmpty(json));
         }
     }
 }
