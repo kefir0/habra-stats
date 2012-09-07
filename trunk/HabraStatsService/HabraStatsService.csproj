@@ -42,12 +42,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Service1.cs">
+    <Compile Include="Habra\Comment.cs" />
+    <Compile Include="Habra\Habr.cs" />
+    <Compile Include="HabraStatsSvc.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Service1.Designer.cs">
-      <DependentUpon>Service1.cs</DependentUpon>
+    <Compile Include="HabraStatsSvc.Designer.cs">
+      <DependentUpon>HabraStatsSvc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Habra\Post.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

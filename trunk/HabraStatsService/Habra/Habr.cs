@@ -8,77 +8,76 @@ using System.Text.RegularExpressions;
 
 namespace HabraStatsService.Habra
 {
-    internal class Habr
+    public class Habr
     {
-        private void Delme()
+        private const string PostUrlFormat = "http://habrahabr.ru/post/{0}/";
+        private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
+        private const string CachePath = @"e:\HabrCache";
+
+        public string DownloadString(string url)
         {
-            var wc = new WebClient() { Encoding = Encoding.UTF8 };
-
-            Func<string, string> GetCachePath = s =>
+            var fileName = GetCachePath(url);
+            if (File.Exists(fileName))
             {
-                var cachePath = @"c:\temp\HabrCache";
-                var fileName = s.Replace("/", "-").Replace(".", "-").Replace(":", "-");
-                fileName = Path.Combine(cachePath, fileName + ".html");
-                return fileName;
-            };
-
-            Func<string, string> Download = s =>
+                return File.ReadAllText(fileName);
+            }
+            
+            var html = "";
+            var wc = new WebClient { Encoding = Encoding.UTF8 };
+            try
             {
-                var fileName = GetCachePath(s);
-                if (File.Exists(fileName))
-                {
-                    return File.ReadAllText(fileName);
-                }
-                else
-                {
-                    var html = "";
-                    try
-                    {
-                        html = wc.DownloadString(s);
-                    }
-                    catch { }
-                    File.WriteAllText(fileName, html);
-                    return html;
-                }
-            };
+                html = wc.DownloadString(url);
+            }
+            catch { }
 
-            Func<string, int> ParseCommentRating = s =>
-            {
-                //("|" + s.Trim() + "|").Dump();
-                //((int)s[0]).Dump();
-                return int.Parse(s.Replace("–", "-"));
-            };
+            File.WriteAllText(fileName, html);
+            return html;
+        }
 
-            const string postUrlFormat = "http://habrahabr.ru/post/{0}/";
-            var lastPostHtml = Download("http://habrahabr.ru/posts/collective/new/");
-            var lastPostRegex = new Regex(string.Format(postUrlFormat, "([0-9]+)"));
+        public string DownloadPost(int postId)
+        {
+            return DownloadString(string.Format(PostUrlFormat, postId));
+        }
+
+        private static string GetCachePath(string postUrl)
+        {
+            var fileName = postUrl.Replace("/", "-").Replace(".", "-").Replace(":", "-");
+            fileName = Path.Combine(CachePath, fileName + ".html");
+            return fileName;
+        }
+
+        private static int ParseCommentRating(string commentRating)
+        {
+            return int.Parse(commentRating.Replace("–", "-"));
+        }
+
+        public IEnumerable<Post> GetRecentPosts(int postCount)
+        {
+            var lastPostHtml = DownloadString(RecentPostsUrl);
+            var lastPostRegex = new Regex(string.Format(PostUrlFormat, "([0-9]+)"));
             var match = lastPostRegex.Match(lastPostHtml);
             var lastPostId = int.Parse(match.Groups[1].Value);
-            var allComments = new List<dynamic>();
-
-            //var commentRegex = new Regex("<div class=\"comment item\".*?<div class=\"mark.*?<div class=\"message.*?\">(.*?)<//div>");
             var commentRegex = new Regex("<div class=\"comment_item\" id=\"(.*?)\".*?<span class=\"score\".*?>(.*?)</span>.*?<div class=\"message.*?\">(.*?)</div>", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
-            // Take some recent posts and parse comments
-            for (var id = lastPostId; id > lastPostId - 500; id--)
+            for (var i = lastPostId; i > lastPostId - postCount; i--)
             {
-                var postUrl = string.Format(postUrlFormat, id);
-                var postHtml = Download(postUrl);
-                //postHtml.Dump();
-                var comments = commentRegex.Matches(postHtml).OfType<Match>().Select(c =>
-                new
-                {
-                    Id = c.Groups[1].Value,
-                    Score = ParseCommentRating(c.Groups[2].Value),
-                    Text = c.Groups[3].Value.Trim(),
-                    Url = Util.RawHtml(string.Format("<a href='{0}'>{0}</a>", postUrl.TrimEnd('/') + "#" + c.Groups[1].Value))
-                });
-                allComments.AddRange(comments);
+                var postHtml = DownloadPost(i);
+                var comments = commentRegex.Matches(postHtml).OfType<Match>()
+                    .Select(c =>
+                            new Comment
+                                {
+                                    Id = c.Groups[1].Value,
+                                    Score = ParseCommentRating(c.Groups[2].Value),
+                                    Text = c.Groups[3].Value.Trim(),
+                                    Url = GetCommentUrl(i, c.Groups[1].Value)
+                                });
+                yield return new Post {Id = i, Comments = comments.ToArray()};
             }
+        }
 
-            allComments.OrderByDescending(c => c.Score).Take(20).Dump();
-            allComments.OrderBy(c => c.Score).Take(20).Dump();
-            
+        private static string GetCommentUrl(int postId, string commentId)
+        {
+            return string.Format(PostUrlFormat, postId).TrimEnd('/') + "#" + commentId;
         }
     }
 }

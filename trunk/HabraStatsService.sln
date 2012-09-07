@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabraStatsService", "HabraStatsService\HabraStatsService.csproj", "{F8B38E53-7884-4B54-9595-073F2567AFEB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabraStatsServiceTest", "HabraStatsServiceTest\HabraStatsServiceTest.csproj", "{CD0660C3-9029-430F-A306-D1316CDF6746}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{F8B38E53-7884-4B54-9595-073F2567AFEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8B38E53-7884-4B54-9595-073F2567AFEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8B38E53-7884-4B54-9595-073F2567AFEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD0660C3-9029-430F-A306-D1316CDF6746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD0660C3-9029-430F-A306-D1316CDF6746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD0660C3-9029-430F-A306-D1316CDF6746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD0660C3-9029-430F-A306-D1316CDF6746}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
