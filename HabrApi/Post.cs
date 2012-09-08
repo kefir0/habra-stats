@@ -32,16 +32,17 @@ namespace HabrApi
             if (string.IsNullOrEmpty(html))
                 return null;
 
-            var comments = Comment.Parse(html, id);
             var title = TitleRegex.Match(html).Groups[1].Value;
             var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" â ", " "));
-            return new Post
-            {
-                Id = id,
-                Title = title,
-                Date = date,
-                Comments = comments.ToArray()
-            };
+            var post = new Post
+                           {
+                               Id = id,
+                               Title = title,
+                               Date = date
+                           };
+            post.Comments = Comment.Parse(html, post).ToArray();
+
+            return post;
         }
 
         private static readonly Regex TitleRegex = new Regex("<title>(.*?)</title>", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);

@@ -15,8 +15,10 @@ namespace HabrApi
         public int ScoreMinus { get; set; }
         public string Text { get; set; }
         public string Url { get; set; }
+        public string PostUrl { get; set; }
+        public string PostTitle { get; set; }
 
-        public static IEnumerable<Comment> Parse(string postHtml, int postId)
+        public static IEnumerable<Comment> Parse(string postHtml, Post post)
         {
             return CommentRegex.Matches(postHtml).OfType<Match>()
                 .Select(c =>
@@ -25,7 +27,9 @@ namespace HabrApi
                                 Id = c.Groups[1].Value,
                                 Score = ParseCommentRating(c.Groups[2].Value),
                                 Text = c.Groups[3].Value.Trim(),
-                                Url = GetCommentUrl(postId, c.Groups[1].Value)
+                                Url = GetCommentUrl(post.Id, c.Groups[1].Value),
+                                PostUrl = post.Url,
+                                PostTitle = post.Title
                             });
         }
 
