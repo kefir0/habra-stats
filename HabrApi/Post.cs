@@ -12,9 +12,15 @@ namespace HabrApi
         public string Title { get; set; }
         public DateTime Date { get; set; }
         public Comment[] Comments { get; set; }
+        
         public string Url
         {
             get { return GetUrl(Id); }
+        }
+
+        public double DaysOld
+        {
+            get { return (DateTime.Now - Date).TotalDays; }
         }
 
         public static string GetUrl(int postId)
@@ -32,17 +38,24 @@ namespace HabrApi
             if (string.IsNullOrEmpty(html))
                 return null;
 
-            var title = TitleRegex.Match(html).Groups[1].Value;
-            var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" â ", " "));
-            var post = new Post
-                           {
-                               Id = id,
-                               Title = title,
-                               Date = date
-                           };
-            post.Comments = Comment.Parse(html, post).ToArray();
+            try
+            {
+                var title = TitleRegex.Match(html).Groups[1].Value;
+                var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" â ", " "));
+                var post = new Post
+                {
+                    Id = id,
+                    Title = title,
+                    Date = date
+                };
+                post.Comments = Comment.Parse(html, post).ToArray();
 
-            return post;
+                return post;
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
 
         private static readonly Regex TitleRegex = new Regex("<title>(.*?)</title>", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);

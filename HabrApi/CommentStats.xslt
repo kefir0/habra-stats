@@ -4,7 +4,7 @@
   <xsl:template match="/">
     <html>
       <head>
-        <title>GMS Notice</title>
+        <title>Habrahabr top comments</title>
         <style type="text/css">
           .score
           {
@@ -16,11 +16,11 @@
       </head>
 
       <body>
-        <table>
+        <table border="1">
           <xsl:for-each select="//Comment">
             <tr>
               <td>
-                <xsl:value-of select="Text" />
+                <xsl:value-of select="Text" disable-output-escaping="yes" />
               </td>
               <td>
                 <div class="score">

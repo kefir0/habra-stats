@@ -11,7 +11,7 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 2;
+        private const int CachePostsOlderThanDays = 4;
 
         public string DownloadString(string url)
         {
@@ -32,15 +32,22 @@ namespace HabrApi
             var fileName = GetCachePath(url);
             if (File.Exists(fileName))
             {
-                return Post.Parse(File.ReadAllText(fileName), postId);
+                var cachedPost = Post.Parse(File.ReadAllText(fileName), postId);
+                if (ShouldCache(cachedPost))
+                    return cachedPost;
             }
             var html = DownloadString(url);
             var post = Post.Parse(html, postId);
-            if (post == null || (DateTime.Now - post.Date).TotalDays > CachePostsOlderThanDays)
+            if (ShouldCache(post))
             {
                 File.WriteAllText(fileName, html);
             }
             return post;
+        }
+
+        private static bool ShouldCache(Post post)
+        {
+            return post == null || post.DaysOld > CachePostsOlderThanDays;
         }
 
         private static string GetCachePath(string postUrl)
