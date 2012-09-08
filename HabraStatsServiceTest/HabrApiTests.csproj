@@ -6,8 +6,8 @@
     <ProjectGuid>{CD0660C3-9029-430F-A306-D1316CDF6746}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HabraStatsServiceTest</RootNamespace>
-    <AssemblyName>HabraStatsServiceTest</AssemblyName>
+    <RootNamespace>HabrApiTests</RootNamespace>
+    <AssemblyName>HabrApiTests</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
@@ -55,6 +55,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\HabrApi\HabrApi.csproj">
+      <Project>{8169309A-27E8-4C64-B917-8AB83495DE04}</Project>
+      <Name>HabrApi</Name>
+    </ProjectReference>
     <ProjectReference Include="..\HabraStatsService\HabraStatsService.csproj">
       <Project>{F8B38E53-7884-4B54-9595-073F2567AFEB}</Project>
       <Name>HabraStatsService</Name>

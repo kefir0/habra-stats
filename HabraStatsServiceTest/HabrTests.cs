@@ -1,7 +1,6 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using System.Web.Script.Serialization;
-using HabraStatsService.Habra;
+using HabrApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HabraStatsServiceTest
