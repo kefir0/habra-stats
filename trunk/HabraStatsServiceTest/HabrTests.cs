@@ -25,5 +25,15 @@ namespace HabraStatsServiceTest
             var json = js.Serialize(post);
             Assert.IsFalse(string.IsNullOrEmpty(json));
         }
+
+        [TestMethod]
+        public void TestGenerateCommentStats()
+        {
+            var h = new Habr();
+            var sg = new StatsGenerator();
+            var report = sg.GenerateCommentStats(h.GetRecentPosts().Take(3));
+            Assert.IsFalse(string.IsNullOrEmpty(report));
+        }
+
     }
 }
