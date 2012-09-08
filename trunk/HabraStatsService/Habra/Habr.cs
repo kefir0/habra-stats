@@ -51,11 +51,14 @@ namespace HabraStatsService.Habra
             return fileName;
         }
 
-        public IEnumerable<Post> GetRecentPosts(int postCount)
+        /// <summary>
+        /// Enumerates all posts from newest to oldest.
+        /// </summary>
+        public IEnumerable<Post> GetRecentPosts()
         {
             var lastPostId = GetLastPostId();
 
-            for (var i = lastPostId; i > lastPostId - postCount; i--)
+            for (var i = lastPostId; i >= 0; i--)
             {
                 var post = DownloadPost(i);
                 if (post != null)

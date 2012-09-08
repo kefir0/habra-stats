@@ -13,15 +13,15 @@ namespace HabraStatsServiceTest
         public void TestGetPosts()
         {
             var h = new Habr();
-            var posts = h.GetRecentPosts(10).OrderByDescending(p => p.Comments.Length).ToArray();
-            Assert.IsTrue(posts.Any());
+            var posts = h.GetRecentPosts().Take(10).OrderByDescending(p => p.Comments.Length).ToArray();
+            Assert.IsTrue(posts.Length == 10);
         }
 
         [TestMethod]
         public void TestSerialization()
         {
             var h = new Habr();
-            var post = h.GetRecentPosts(10).OrderByDescending(p => p.Comments.Length).FirstOrDefault();
+            var post = h.GetRecentPosts().Take(10).OrderByDescending(p => p.Comments.Length).FirstOrDefault();
             var js = new JavaScriptSerializer();
             var json = js.Serialize(post);
             Assert.IsFalse(string.IsNullOrEmpty(json));
