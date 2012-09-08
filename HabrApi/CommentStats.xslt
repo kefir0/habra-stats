@@ -6,14 +6,32 @@
       <head>
         <title>GMS Notice</title>
         <style type="text/css">
+          .score
+          {
+            text-align: right;
+            color: green;
+            margin: 10px;
+          }
         </style>
       </head>
 
       <body>
-        <xsl:for-each select="//Comment">
-          <xsl:value-of select="Text" />
-        </xsl:for-each>
+        <table>
+          <xsl:for-each select="//Comment">
+            <tr>
+              <td>
+                <xsl:value-of select="Text" />
+              </td>
+              <td>
+                <div class="score">
+                  <xsl:value-of select="Score" />
+                </div>
+              </td>
+            </tr>
+          </xsl:for-each>
+        </table>
       </body>
+      
     </html>
   </xsl:template>
 </xsl:stylesheet>
