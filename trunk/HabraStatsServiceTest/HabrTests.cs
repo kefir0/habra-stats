@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.IO;
+using System.Linq;
 using System.Web.Script.Serialization;
 using HabrApi;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -31,8 +33,10 @@ namespace HabraStatsServiceTest
         {
             var h = new Habr();
             var sg = new StatsGenerator();
-            var report = sg.GenerateCommentStats(h.GetRecentPosts().Take(3));
+            var report = sg.GenerateCommentStats(h.GetRecentPosts().TakeWhile(p => p.DaysOld < 7));
             Assert.IsFalse(string.IsNullOrEmpty(report));
+
+            File.WriteAllText(@"e:\HabrCommentsText.html", report);
         }
 
     }
