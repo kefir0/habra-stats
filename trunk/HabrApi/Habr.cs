@@ -4,6 +4,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace HabrApi
 {
@@ -11,7 +12,7 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 4;
+        private const int CachePostsOlderThanDays = 0;
 
         public string DownloadString(string url)
         {

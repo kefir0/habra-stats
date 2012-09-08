@@ -21,6 +21,20 @@
             <tr>
               <td>
                 <xsl:value-of select="Text" disable-output-escaping="yes" />
+                <br />
+                <a>
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="Url"/>
+                  </xsl:attribute>
+                  link
+                </a>
+                &#160;&#160;
+                <a>
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="PostUrl"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="PostTitle"/>
+                </a>
               </td>
               <td>
                 <div class="score">
