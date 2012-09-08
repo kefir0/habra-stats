@@ -33,7 +33,7 @@ namespace HabraStatsServiceTest
         {
             var h = new Habr();
             var sg = new StatsGenerator();
-            var report = sg.GenerateCommentStats(h.GetRecentPosts().TakeWhile(p => p.DaysOld < 7));
+            var report = sg.GenerateCommentStats(h.GetRecentPosts().TakeWhile(p => p.DaysOld < 3));
             Assert.IsFalse(string.IsNullOrEmpty(report));
 
             File.WriteAllText(@"e:\HabrCommentsText.html", report);
