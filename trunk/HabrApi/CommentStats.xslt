@@ -10,40 +10,46 @@
           {
             text-align: right;
             color: green;
-            margin: 10px;
+            display:inline;
+            float:right;
           }
         </style>
       </head>
 
       <body>
-        <table border="1">
-          <xsl:for-each select="//Comment">
-            <tr>
-              <td>
-                <xsl:value-of select="Text" disable-output-escaping="yes" />
-                <br />
-                <a>
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="Url"/>
-                  </xsl:attribute>
-                  link
-                </a>
-                &#160;&#160;
-                <a>
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="PostUrl"/>
-                  </xsl:attribute>
-                  <xsl:value-of select="PostTitle"/>
-                </a>
-              </td>
-              <td>
-                <div class="score">
-                  <xsl:value-of select="Score" />
-                </div>
-              </td>
-            </tr>
-          </xsl:for-each>
-        </table>
+        <xsl:for-each select="//Comment">
+          <div>
+            <!-- http://habrahabr.ru/i/avatars/stub-user-small.gif -->
+            <!-- Avatar, username, date, link, postlink,           rating -->
+            <img>
+              <xsl:attribute name="src">
+                <xsl:value-of select="Avatar"/>
+              </xsl:attribute>
+            </img>
+            &#160;
+            <xsl:value-of select="UserName" />
+            &#160;&#160;
+            <a>
+              <xsl:attribute name="href">
+                <xsl:value-of select="Url"/>
+              </xsl:attribute>
+              #
+            </a>
+            &#160;&#160;
+            <a>
+              <xsl:attribute name="href">
+                <xsl:value-of select="PostUrl"/>
+              </xsl:attribute>
+              <xsl:value-of select="PostTitle"/>
+            </a>
+            <div class="score">
+              <xsl:value-of select="Score" />
+            </div>
+            <br />
+            <xsl:value-of select="Text" disable-output-escaping="yes" />
+          </div>
+          <p/>
+        </xsl:for-each>
       </body>
       
     </html>
