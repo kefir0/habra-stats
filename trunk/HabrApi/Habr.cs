@@ -1,6 +1,9 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -12,7 +15,7 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 0;
+        private const int CachePostsOlderThanDays = 2;
 
         public string DownloadString(string url)
         {
@@ -64,12 +67,23 @@ namespace HabrApi
         public IEnumerable<Post> GetRecentPosts()
         {
             var lastPostId = GetLastPostId();
+            const int parallelBatchSize = 8;
 
-            for (var i = lastPostId; i >= 0; i--)
+            for (var i = lastPostId; i >= 0; i-=parallelBatchSize)
             {
-                var post = DownloadPost(i);
-                if (post != null)
-                    yield return post;
+                var parallelResults = new ConcurrentBag<Post>();
+                Parallel.For(i - parallelBatchSize, i, j =>
+                                                           {
+                                                               Debug.WriteLine(j);
+                                                               var post = DownloadPost(j);
+                                                               if (post != null)
+                                                                   parallelResults.Add(post);
+                                                           });
+
+                foreach (var result in parallelResults)
+                {
+                    yield return result;
+                }
             }
         }
 
@@ -77,9 +91,9 @@ namespace HabrApi
         {
             var lastPostHtml = DownloadString(RecentPostsUrl);
             var lastPostRegex = new Regex(string.Format(Post.UrlFormat, "([0-9]+)"));
-            var match = lastPostRegex.Match(lastPostHtml);
-            var lastPostId = int.Parse(match.Groups[1].Value);
-            return lastPostId;
+            var matches = lastPostRegex.Matches(lastPostHtml);
+            var maxId = matches.OfType<Match>().Max(match => int.Parse(match.Groups[1].Value));
+            return maxId + 5; // compensate error
         }
     }
 }
