@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
 using HabrApi;
+using HabraStatsService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HabraStatsServiceTest
@@ -33,10 +34,19 @@ namespace HabraStatsServiceTest
         {
             var h = new Habr();
             var sg = new StatsGenerator();
-            var report = sg.GenerateCommentStats(h.GetRecentPosts().TakeWhile(p => p.DaysOld < 3));
+            var report = sg.GenerateTopCommentStats(h.GetRecentPosts().TakeWhile(p => p.DaysOld < 3));
             Assert.IsFalse(string.IsNullOrEmpty(report));
 
             File.WriteAllText(@"e:\HabrCommentsText.html", report);
+        }
+
+        [TestMethod]
+        public void UploadTest()
+        {
+            var h = new Habr();
+            var sg = new StatsGenerator();
+            var report = sg.GenerateTopCommentStats(h.GetRecentPosts().Take(5));
+            Uploader.Publish(report, "3dayscomments.html");
         }
 
     }

@@ -30,9 +30,9 @@ namespace HabrApi
             return _commentsXslt;
         }
 
-        public string GenerateCommentStats(IEnumerable<Post> posts)
+        public string GenerateTopCommentStats(IEnumerable<Post> posts)
         {
-            var comments = posts.SelectMany(p => p.Comments).OrderByDescending(c => c.Score)
+            var comments = posts.SelectMany(p => p.Comments).Where(c=>c.Score > 10).OrderByDescending(c => c.Score)
                 .Take(100).ToArray();
 
             return TransformData(comments, GetCommentsXslt());
