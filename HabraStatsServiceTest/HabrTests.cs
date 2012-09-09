@@ -34,7 +34,7 @@ namespace HabraStatsServiceTest
         {
             var h = new Habr();
             var sg = new StatsGenerator();
-            var report = sg.GenerateTopCommentStats(h.GetRecentPosts().TakeWhile(p => p.DaysOld < 3));
+            var report = sg.GenerateTopCommentStats(h.GetRecentPosts().Take(5));
             Assert.IsFalse(string.IsNullOrEmpty(report));
 
             File.WriteAllText(@"e:\HabrCommentsText.html", report);
