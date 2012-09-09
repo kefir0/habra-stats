@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.ServiceProcess;
+using System.Threading;
 using System.Timers;
 using HabrApi;
 using System.Diagnostics;
+using Timer = System.Timers.Timer;
 
 namespace HabraStatsService
 {
@@ -28,7 +30,7 @@ namespace HabraStatsService
         {
             Log("HabraStats started");
             _timer.Start();
-            GenerateAndUploadStats();
+            ThreadPool.QueueUserWorkItem(o => GenerateAndUploadStats());
         }
 
         protected override void OnStop()
