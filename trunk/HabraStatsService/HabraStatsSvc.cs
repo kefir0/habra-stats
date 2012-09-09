@@ -45,24 +45,31 @@ namespace HabraStatsService
 
         private static void GenerateAndUploadStats()
         {
-            var habr = new Habr();
-            var statsGenerator = new StatsGenerator();
+            try
+            {
+                var habr = new Habr();
+                var statsGenerator = new StatsGenerator();
 
-            Log("Generating daily comment stats");
-            var dayReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts()
-                                                                       .TakeWhile(p => (DateTime.Now.Date - p.Date.Date).TotalDays <= 1)
-                                                                       .Where(p => p.Date.Date == DateTime.Now.Date));
-            
-            Log("Publishing daily comment stats");
-            Uploader.Publish(dayReport, "day.html");
-            Log("Daily comment stats uploaded");
+                Log("Generating daily comment stats");
+                var dayReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts()
+                                                                           .TakeWhile(p => (DateTime.Now.Date - p.Date.Date).TotalDays <= 1)
+                                                                           .Where(p => p.Date.Date == DateTime.Now.Date));
+
+                Log("Publishing daily comment stats");
+                Uploader.Publish(dayReport, "day.html");
+                Log("Daily comment stats uploaded");
 
 
-            Log("Generating week comment stats");
-            var weekReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 8));
-            Log("Publishing week comment stats");
-            Uploader.Publish(weekReport, "week.html");
-            Log("Week comment stats uploaded");
+                Log("Generating week comment stats");
+                var weekReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 8));
+                Log("Publishing week comment stats");
+                Uploader.Publish(weekReport, "week.html");
+                Log("Week comment stats uploaded");
+            }
+            catch(Exception e)
+            {
+                Log("Failed to generate habr stats :( " + e);
+            }
         }
     }
 }
