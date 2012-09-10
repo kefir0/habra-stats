@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -41,7 +42,7 @@ namespace HabrApi
             try
             {
                 var title = TitleRegex.Match(html).Groups[1].Value;
-                var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" â ", " "));
+                var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" â ", " "), CultureInfo.GetCultureInfo("ru-RU"));
                 var post = new Post
                 {
                     Id = id,
