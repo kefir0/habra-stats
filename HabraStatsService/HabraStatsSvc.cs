@@ -47,29 +47,26 @@ namespace HabraStatsService
         {
             try
             {
-                // TODO: call GetRecentPosts() once!!
-                
                 var habr = new Habr();
+                Log("Loading month posts");
+                var monthPosts = habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 35).ToArray();
+                Log("Month posts loaded, count = " + monthPosts.Length);
+
                 var statsGenerator = new StatsGenerator();
-
                 Log("Generating daily comment stats");
-                var dayReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts()
-                                                                           .TakeWhile(p => (DateTime.Now.Date - p.Date.Date).TotalDays <= 1)
-                                                                           .Where(p => p.Date.Date == DateTime.Now.Date));
-
+                var dayReport = statsGenerator.GenerateTopCommentStats(monthPosts.Where(p => p.DaysOld <= 1));
                 Log("Publishing daily comment stats");
                 Uploader.Publish(dayReport, "day.html");
                 Log("Daily comment stats uploaded");
 
-
                 Log("Generating week comment stats");
-                var weekReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 8));
+                var weekReport = statsGenerator.GenerateTopCommentStats(monthPosts.Where(p => p.DaysOld <= 7));
                 Log("Publishing week comment stats");
                 Uploader.Publish(weekReport, "week.html");
                 Log("Week comment stats uploaded");
 
                 Log("Generating month comment stats");
-                var monthReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 32));
+                var monthReport = statsGenerator.GenerateTopCommentStats(monthPosts.Where(p => p.DaysOld <= 31));
                 Log("Publishing month comment stats");
                 Uploader.Publish(monthReport, "month.html");
                 Log("Month comment stats uploaded");

@@ -15,7 +15,7 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 3;
+        private const int CachePostsOlderThanDays = 6;
 
         public string DownloadString(string url)
         {

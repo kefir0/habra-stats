@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
@@ -48,6 +49,21 @@ namespace HabraStatsServiceTest
             var report = sg.GenerateTopCommentStats(h.GetRecentPosts().Take(5));
             Uploader.Publish(report, "3dayscomments.html");
         }
+
+        //[TestMethod]
+        //public void GetAllPostsTest()
+        //{
+        //    var h = new Habr();
+        //    var sg = new StatsGenerator();
+        //    var memStart = GC.GetTotalMemory(true)/1024;
+        //    var allPosts = h.GetRecentPosts().ToArray();
+        //    var memAllPosts = GC.GetTotalMemory(true) / 1024;
+        //    Debug.WriteLine("All posts loaded, mem used:" + (memAllPosts - memStart));
+        //    var report = sg.GenerateTopCommentStats(allPosts);
+        //    var memReport = GC.GetTotalMemory(true) / 1024;
+        //    Debug.WriteLine("All posts report generated, mem used:" + (memReport - memStart));
+        //    File.WriteAllText(@"e:\HabrCommentsALL.html", report);
+        //}
 
     }
 }
