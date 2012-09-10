@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabrApiTests", "HabraStatsS
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabrApi", "HabrApi\HabrApi.csproj", "{8169309A-27E8-4C64-B917-8AB83495DE04}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HabrCacheLoader", "HabrCacheLoader\HabrCacheLoader.csproj", "{14B9E6D1-9687-463C-BCF4-904A12CCD5D5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{8169309A-27E8-4C64-B917-8AB83495DE04}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8169309A-27E8-4C64-B917-8AB83495DE04}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8169309A-27E8-4C64-B917-8AB83495DE04}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14B9E6D1-9687-463C-BCF4-904A12CCD5D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14B9E6D1-9687-463C-BCF4-904A12CCD5D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14B9E6D1-9687-463C-BCF4-904A12CCD5D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14B9E6D1-9687-463C-BCF4-904A12CCD5D5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
