@@ -1,6 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl">
+<xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:msxsl="urn:schemas-microsoft-com:xslt" exclude-result-prefixes="msxsl" xmlns:my="urn:sample">
 
+  <msxsl:script language="C#" implements-prefix="my">
+    public string Now()
+    {
+      return DateTime.Now.ToString();
+    }
+  </msxsl:script>
+  
   <xsl:template match="/">
     <html>
       <head>
@@ -50,6 +57,12 @@
           </div>
           <p/>
         </xsl:for-each>
+        <p/>
+
+        <div style="color:gray">
+          Generated: <xsl:value-of select="my:Now()"/><br />
+          Created by kefir. naxah1 at gmail. Source: <a href="http://code.google.com/p/habra-stats/source/browse/">code.google.com/p/habra-stats</a>
+        </div>
       </body>
       
     </html>

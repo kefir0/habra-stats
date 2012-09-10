@@ -24,7 +24,7 @@ namespace HabrApi
                 {
                     if (resourceStream == null)
                         throw new Exception("Cannot load comments transform");
-                    _commentsXslt.Load(XmlReader.Create(resourceStream));
+                    _commentsXslt.Load(XmlReader.Create(resourceStream), new XsltSettings(true, true), null);
                 }
             }
             return _commentsXslt;
@@ -35,7 +35,7 @@ namespace HabrApi
             var comments = posts.SelectMany(p => p.Comments).Where(c=>c.Score > 10).OrderByDescending(c => c.Score)
                 .Take(100).ToArray();
 
-            return TransformData(comments, GetCommentsXslt());
+            return MinifyHtml(TransformData(comments, GetCommentsXslt()));
         }
 
         private static string TransformData(object data, XslCompiledTransform transform)
@@ -54,6 +54,12 @@ namespace HabrApi
                     return Encoding.UTF8.GetString(resultStream.GetBuffer());
                 }
             }
+        }
+
+        private static string MinifyHtml(string html)
+        {
+            var lines = html.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries).Where(s => !string.IsNullOrWhiteSpace(s));
+            return lines.Select(s => s.Trim()).Aggregate((s1, s2) => s1 + Environment.NewLine + s2);
         }
     }
 }

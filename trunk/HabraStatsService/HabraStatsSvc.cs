@@ -47,6 +47,8 @@ namespace HabraStatsService
         {
             try
             {
+                // TODO: call GetRecentPosts() once!!
+                
                 var habr = new Habr();
                 var statsGenerator = new StatsGenerator();
 
@@ -65,6 +67,12 @@ namespace HabraStatsService
                 Log("Publishing week comment stats");
                 Uploader.Publish(weekReport, "week.html");
                 Log("Week comment stats uploaded");
+
+                Log("Generating month comment stats");
+                var monthReport = statsGenerator.GenerateTopCommentStats(habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 32));
+                Log("Publishing month comment stats");
+                Uploader.Publish(monthReport, "month.html");
+                Log("Month comment stats uploaded");
             }
             catch(Exception e)
             {
