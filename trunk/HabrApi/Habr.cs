@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -145,5 +146,6 @@ namespace HabrApi
             var maxId = matches.OfType<Match>().Max(match => int.Parse(match.Groups[1].Value));
             return maxId + 5; // compensate error
         }
+
     }
 }
