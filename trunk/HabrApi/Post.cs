@@ -34,7 +34,7 @@ namespace HabrApi
             return String.Format("[{0}] {1}", Id, Title);
         }
 
-        public static Post Parse(string html, int id)
+        public static Post Parse(string html, int id, bool skipComments = false)
         {
             if (string.IsNullOrEmpty(html))
                 return null;
@@ -49,7 +49,9 @@ namespace HabrApi
                     Title = title,
                     Date = date
                 };
-                post.Comments = Comment.Parse(html, post).ToArray();
+                
+                if (!skipComments)
+                    post.Comments = Comment.Parse(html, post).ToArray();
 
                 return post;
             }
