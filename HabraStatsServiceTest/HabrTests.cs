@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
@@ -15,16 +16,14 @@ namespace HabraStatsServiceTest
         [TestMethod]
         public void TestGetPosts()
         {
-            var h = new Habr();
-            var posts = h.GetRecentPosts().Take(10).OrderByDescending(p => p.Comments.Length).ToArray();
+            var posts = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Length).ToArray();
             Assert.IsTrue(posts.Length == 10);
         }
 
         [TestMethod]
         public void TestSerialization()
         {
-            var h = new Habr();
-            var post = h.GetRecentPosts().Take(10).OrderByDescending(p => p.Comments.Length).FirstOrDefault();
+            var post = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Length).FirstOrDefault();
             var js = new JavaScriptSerializer();
             var json = js.Serialize(post);
             Assert.IsFalse(string.IsNullOrEmpty(json));
@@ -33,9 +32,8 @@ namespace HabraStatsServiceTest
         [TestMethod]
         public void TestGenerateCommentStats()
         {
-            var h = new Habr();
             var sg = new StatsGenerator();
-            var report = sg.GenerateTopCommentStats(h.GetRecentPosts().Take(5));
+            var report = sg.GenerateTopCommentStats(GetTestPosts().Take(5));
             Assert.IsFalse(string.IsNullOrEmpty(report));
 
             File.WriteAllText(@"e:\HabrCommentsText.html", report);
@@ -44,10 +42,39 @@ namespace HabraStatsServiceTest
         [TestMethod]
         public void UploadTest()
         {
-            var h = new Habr();
             var sg = new StatsGenerator();
-            var report = sg.GenerateTopCommentStats(h.GetRecentPosts().Take(5));
-            Uploader.Publish(report, "3dayscomments.html");
+            var report = sg.GenerateTopCommentStats(GetTestPosts().Take(5));
+            Uploader.Publish(report, "testComments.html");
+        }
+
+        [TestMethod]
+        public void GetAllTimeTopCommentsTest()
+        {
+            var topCommentIds = GetTestPosts()
+                .SelectMany(p => p.Comments)
+                .Where(c => c.Score > 30)
+                .Select(c => new { c.Id, c.Score })
+                .OrderByDescending(c => c.Score)
+                .Take(50).ToArray();
+
+            foreach (var c in topCommentIds)
+            {
+                Console.WriteLine(c);
+            }
+        }
+
+        private static IEnumerable<Post> GetTestPosts()
+        {
+            const int maxPostId = 152123;
+            var habr = new Habr();
+            var count = 0;
+            foreach (var cachedPost in habr.GetCachedPosts(maxPostId))
+            {
+                count++;
+                if (count % 100 == 0)
+                Debug.WriteLine(count);
+                yield return cachedPost;
+            }
         }
 
         //[TestMethod]

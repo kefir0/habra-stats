@@ -1,6 +1,5 @@
 ﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Linq;
 using HabrApi;
 
 namespace HabrCacheLoader
@@ -13,16 +12,17 @@ namespace HabrCacheLoader
             var lastPostId = habr.GetLastPostId();
             var startTime = DateTime.Now;
             var loadedCount = 0;
-            Parallel.For(0, lastPostId, new ParallelOptions {MaxDegreeOfParallelism = 32},
-                         id =>
-                             {
-                                 habr.DownloadPost(id);
-                                 Interlocked.Increment(ref loadedCount);
-                                 var runTime = DateTime.Now - startTime;
-                                 var postsPerSecond = (loadedCount)/runTime.TotalSeconds;
-                                 var eta = TimeSpan.FromSeconds(lastPostId/postsPerSecond);
-                                 Console.WriteLine("Running: {0:hh\\:mm\\:ss}; Posts/second: {1:0.0}; Id: {2}; ETA: {3:hh\\:mm\\:ss}", runTime, postsPerSecond, id, eta);
-                             });
+            var notCachedPosts = Enumerable.Range(1, lastPostId).Where(i => !habr.IsInCache(i)).ToArray();
+            Console.WriteLine("Posts to load: " + notCachedPosts.Length);
+            foreach (var id in notCachedPosts)
+            {
+                habr.DownloadPost(id, true);
+                loadedCount++;
+                var runTime = DateTime.Now - startTime;
+                var postsPerSecond = (loadedCount)/runTime.TotalSeconds;
+                var eta = TimeSpan.FromSeconds((notCachedPosts.Length - loadedCount)/postsPerSecond);
+                Console.WriteLine("[{2}] {0:dd\\.hh\\:mm\\:ss}; P/s: {1:0.0}; ETA: {3:dd\\.hh\\:mm\\:ss}; {4} of {5}", runTime, postsPerSecond, id, eta, loadedCount, notCachedPosts.Length);
+            }
         }
     }
 }

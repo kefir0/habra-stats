@@ -7,6 +7,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HabrApi
@@ -15,38 +16,63 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 6;
+        private const int CachePostsOlderThanDays = 4;
+        private const int ParallelBatchSize = 8;
 
         public string DownloadString(string url)
         {
-            try
+            while (true)
             {
-                var wc = new WebClient { Encoding = Encoding.UTF8 };
-                return wc.DownloadString(url);
-            }
-            catch (Exception)
-            {
-                return null;
+                try
+                {
+                    var wc = new WebClient { Encoding = Encoding.UTF8 };
+                    Console.WriteLine("Downloading " + url);
+                    var result = wc.DownloadString(url);
+                    if (!string.IsNullOrWhiteSpace(result))
+                        return result;
+                    Console.WriteLine("Url {0} returned empty result", url);
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine(ex);
+                }
+                Thread.Sleep(500);
             }
         }
 
-        public Post DownloadPost(int postId)
+        public Post DownloadPost(int postId, bool skipComments = false)
         {
             var url = Post.GetUrl(postId);
             var fileName = GetCachePath(url);
             if (File.Exists(fileName))
             {
-                var cachedPost = Post.Parse(File.ReadAllText(fileName), postId);
-                if (ShouldCache(cachedPost))
-                    return cachedPost;
+                // File exists: check if it is valid, parse to retrive post date
+                // And determine whether this post can be loaded from cache
+                var cachedHtml = File.ReadAllText(fileName);
+                if (!string.IsNullOrWhiteSpace(cachedHtml))
+                {
+                    var cachedPost = Post.Parse(cachedHtml, postId, skipComments);
+                    if (ShouldCache(cachedPost))
+                    {
+                        Console.WriteLine("Returning from cache: " + postId);
+                        return cachedPost;
+                    }
+                }
             }
             var html = DownloadString(url);
-            var post = Post.Parse(html, postId);
+            var post = Post.Parse(html, postId, skipComments);
             if (ShouldCache(post))
             {
                 File.WriteAllText(fileName, html);
             }
             return post;
+        }
+
+        public bool IsInCache(int postId)
+        {
+            var url = Post.GetUrl(postId);
+            var fileName = GetCachePath(url);
+            return File.Exists(fileName) && new FileInfo(fileName).Length > 1000;
         }
 
         private static bool ShouldCache(Post post)
@@ -67,18 +93,42 @@ namespace HabrApi
         public IEnumerable<Post> GetRecentPosts()
         {
             var lastPostId = GetLastPostId();
-            const int parallelBatchSize = 8;
 
-            for (var i = lastPostId; i >= 0; i-=parallelBatchSize)
+            for (var i = lastPostId; i >= 0; i-=ParallelBatchSize)
             {
                 var parallelResults = new ConcurrentBag<Post>();
-                Parallel.For(i - parallelBatchSize, i, j =>
+                Parallel.For(i - ParallelBatchSize, i, j =>
                                                            {
                                                                Debug.WriteLine(j);
                                                                var post = DownloadPost(j);
                                                                if (post != null)
                                                                    parallelResults.Add(post);
                                                            });
+
+                foreach (var result in parallelResults)
+                {
+                    yield return result;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Enumerates all valid posts in cache.
+        /// </summary>
+        public IEnumerable<Post> GetCachedPosts(int? maxPostId = null)
+        {
+            var lastPostId = maxPostId ?? GetLastPostId();
+
+            for (var i = 0; i <= lastPostId; i += ParallelBatchSize)
+            {
+                var parallelResults = new ConcurrentBag<Post>();
+                Parallel.For(i, i + ParallelBatchSize, j =>
+                {
+                    if (!IsInCache(j)) return;
+                    var post = Post.Parse(File.ReadAllText(GetCachePath(Post.GetUrl(j))), j);
+                    if (post != null)
+                        parallelResults.Add(post);
+                });
 
                 foreach (var result in parallelResults)
                 {
