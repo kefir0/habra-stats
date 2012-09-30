@@ -51,6 +51,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="HabrSqlCeTests.cs" />
     <Compile Include="HabrTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

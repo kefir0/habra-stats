@@ -31,6 +31,7 @@ namespace HabrApi
         public string Url { get; set; }
         public string PostUrl { get; set; }
         public string PostTitle { get; set; }
+        public int PostId { get; set; }
         public string UserName { get; set; }
         public string Avatar { get; set; }
 
