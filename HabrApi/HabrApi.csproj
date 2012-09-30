@@ -30,14 +30,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EmitMapper">
+      <HintPath>..\packages\EmitMapper.1.0.0\lib\EmitMapper.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework">
+      <HintPath>..\packages\EntityFramework.5.0.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\packages\System.Data.SQLite.1.0.82.0\lib\net40\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq">
-      <HintPath>..\packages\System.Data.SQLite.1.0.82.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
-    </Reference>
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -46,8 +50,29 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Comment.cs" />
+    <Compile Include="EntityModel\Comment.cs">
+      <DependentUpon>HabraStats.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\HabraStats.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HabraStats.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\HabraStats.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HabraStats.tt</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\HabraStats.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HabraStats.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="EntityModel\Post.cs">
+      <DependentUpon>HabraStats.tt</DependentUpon>
+    </Compile>
     <Compile Include="Habr.cs" />
-    <Compile Include="HabrSqlite.cs" />
+    <Compile Include="HabrSqlCe.cs" />
     <Compile Include="Post.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatsGenerator.cs" />
@@ -57,16 +82,35 @@
     <EmbeddedResource Include="CommentStats.xslt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="x64\SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\SQLite.Interop.dll">
+    <Content Include="HabraStats.sdf">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.Config" />
+    <EntityDeploy Include="EntityModel\HabraStats.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>HabraStats.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="EntityModel\HabraStats.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>HabraStats.edmx</DependentUpon>
+      <LastGenOutput>HabraStats.Context.cs</LastGenOutput>
+    </None>
+    <None Include="EntityModel\HabraStats.edmx.diagram">
+      <DependentUpon>HabraStats.edmx</DependentUpon>
+    </None>
+    <None Include="EntityModel\HabraStats.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>HabraStats.edmx</DependentUpon>
+      <LastGenOutput>HabraStats.cs</LastGenOutput>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
