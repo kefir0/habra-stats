@@ -33,6 +33,16 @@ namespace HabrApi
                         return result;
                     Console.WriteLine("Url {0} returned empty result", url);
                 }
+                catch (WebException webEx)
+                {
+                    if (webEx.Status == WebExceptionStatus.ProtocolError)
+                    {
+                        // 404, etc - return content
+                        var sr = new StreamReader(webEx.Response.GetResponseStream());
+                        return sr.ReadToEnd();
+                    }
+                    Console.WriteLine(webEx);
+                }
                 catch (Exception ex)
                 {
                     Console.WriteLine(ex);
@@ -73,7 +83,7 @@ namespace HabrApi
         {
             var url = Post.GetUrl(postId);
             var fileName = GetCachePath(url);
-            return File.Exists(fileName) && new FileInfo(fileName).Length > 1000;
+            return File.Exists(fileName) && new FileInfo(fileName).Length > 10;
         }
 
         private static bool ShouldCache(Post post)
