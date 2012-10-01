@@ -7,6 +7,7 @@ using System.Text;
 using System.Xml;
 using System.Xml.Serialization;
 using System.Xml.Xsl;
+using HabrApi.EntityModel;
 
 namespace HabrApi
 {
@@ -32,7 +33,7 @@ namespace HabrApi
 
         public string GenerateTopCommentStats(IEnumerable<Post> posts)
         {
-            var comments = posts.SelectMany(p => p.Comments).Where(c=>c.Score > 10).OrderByDescending(c => c.Score)
+            var comments = posts.SelectMany(p => p.Comments).OrderByDescending(c => c.Score)
                 .Take(100).ToArray();
 
             return MinifyHtml(TransformData(comments, GetCommentsXslt()));

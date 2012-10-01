@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="HabraStatsModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="HabraStatsModel.Store" Alias="Self" Provider="System.Data.SqlServerCe.4.0" ProviderManifestToken="4.0" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityContainer Name="HabraStatsModelStoreContainer">
           <EntitySet Name="Comments" EntityType="HabraStatsModel.Store.Comments" store:Type="Tables" />
           <EntitySet Name="Posts" EntityType="HabraStatsModel.Store.Posts" store:Type="Tables" />
@@ -17,14 +17,16 @@
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Id" Type="nvarchar" Nullable="false" MaxLength="40" />
           <Property Name="Text" Type="nvarchar" Nullable="false" />
           <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="PostId" Type="int" Nullable="false" />
           <Property Name="PostUrl" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="PostTitle" Type="nvarchar" Nullable="false" MaxLength="1000" />
-          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Date" Type="datetime" />
           <Property Name="Score" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="Avatar" Type="nvarchar" Nullable="false" MaxLength="100" />
         </EntityType>
         <EntityType Name="Posts">
           <Key>
@@ -33,7 +35,7 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="1000" />
           <Property Name="Html" Type="ntext" />
-          <Property Name="Date" Type="datetime" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="PostComments">
           <End Role="Posts" Type="HabraStatsModel.Store.Posts" Multiplicity="1">
@@ -49,8 +51,7 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="HabraStatsModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -58,44 +59,46 @@
           <EntitySet Name="Comments" EntityType="HabraStatsModel.Comment" />
           <EntitySet Name="Posts" EntityType="HabraStatsModel.Post" />
           <AssociationSet Name="PostComments" Association="HabraStatsModel.PostComments">
-            <End Role="Posts" EntitySet="Posts" />
-            <End Role="Comments" EntitySet="Comments" />
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Comment" EntitySet="Comments" />
           </AssociationSet>
         </EntityContainer>
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="4000" Unicode="true" FixedLength="false" />
-          <Property Name="Url" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="PostId" Type="Int32" Nullable="false" />
-          <Property Name="PostUrl" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="PostTitle" Type="String" Nullable="false" MaxLength="1000" Unicode="true" FixedLength="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Score" Type="Int32" Nullable="false" />
-          <NavigationProperty Name="Post" Relationship="HabraStatsModel.PostComments" FromRole="Comments" ToRole="Posts" />
+          <Property Type="String" Name="Id" Nullable="false" MaxLength="40" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Text" Nullable="false" MaxLength="4000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Url" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PostId" Nullable="false" />
+          <Property Type="String" Name="PostUrl" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="PostTitle" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Date" Precision="3" />
+          <Property Type="Int32" Name="Score" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Avatar" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Post" Relationship="HabraStatsModel.PostComments" FromRole="Comment" ToRole="Post" />
         </EntityType>
         <EntityType Name="Post">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Title" Type="String" Nullable="false" MaxLength="1000" Unicode="true" FixedLength="false" />
-          <Property Name="Html" Type="String" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Date" Type="DateTime" Precision="3" />
-          <NavigationProperty Name="Comments" Relationship="HabraStatsModel.PostComments" FromRole="Posts" ToRole="Comments" />
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Html" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="DateTime" Name="Date" Precision="3" Nullable="false" />
+          <NavigationProperty Name="Comments" Relationship="HabraStatsModel.PostComments" FromRole="Post" ToRole="Comment" />
         </EntityType>
         <Association Name="PostComments">
-          <End Role="Posts" Type="HabraStatsModel.Post" Multiplicity="1">
+          <End Type="HabraStatsModel.Post" Role="Post" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Comments" Type="HabraStatsModel.Comment" Multiplicity="*" />
+          <End Type="HabraStatsModel.Comment" Role="Comment" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Posts">
+            <Principal Role="Post">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Comments">
+            <Dependent Role="Comment">
               <PropertyRef Name="PostId" />
             </Dependent>
           </ReferentialConstraint>
@@ -109,24 +112,26 @@
           <EntitySetMapping Name="Comments">
             <EntityTypeMapping TypeName="HabraStatsModel.Comment">
               <MappingFragment StoreEntitySet="Comments">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Text" ColumnName="Text" />
-                <ScalarProperty Name="Url" ColumnName="Url" />
-                <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="PostUrl" ColumnName="PostUrl" />
-                <ScalarProperty Name="PostTitle" ColumnName="PostTitle" />
-                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
                 <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PostTitle" ColumnName="PostTitle" />
+                <ScalarProperty Name="PostUrl" ColumnName="PostUrl" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
           <EntitySetMapping Name="Posts">
             <EntityTypeMapping TypeName="HabraStatsModel.Post">
               <MappingFragment StoreEntitySet="Posts">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Title" ColumnName="Title" />
-                <ScalarProperty Name="Html" ColumnName="Html" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Html" ColumnName="Html" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -144,9 +149,9 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
-        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
       </DesignerInfoPropertySet>
     </Options>
     <!-- Diagram content (shape and connector positions) -->
