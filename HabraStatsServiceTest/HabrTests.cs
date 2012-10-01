@@ -5,10 +5,11 @@ using System.IO;
 using System.Linq;
 using System.Web.Script.Serialization;
 using HabrApi;
+using HabrApi.EntityModel;
 using HabraStatsService;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace HabraStatsServiceTest
+namespace HabrApiTests
 {
     [TestClass]
     public class HabrTests
@@ -16,14 +17,14 @@ namespace HabraStatsServiceTest
         [TestMethod]
         public void TestGetPosts()
         {
-            var posts = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Length).ToArray();
+            var posts = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Count).ToArray();
             Assert.IsTrue(posts.Length == 10);
         }
 
         [TestMethod]
         public void TestSerialization()
         {
-            var post = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Length).FirstOrDefault();
+            var post = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Count).FirstOrDefault();
             var js = new JavaScriptSerializer();
             var json = js.Serialize(post);
             Assert.IsFalse(string.IsNullOrEmpty(json));
@@ -47,21 +48,21 @@ namespace HabraStatsServiceTest
             Uploader.Publish(report, "testComments.html");
         }
 
-        [TestMethod]
-        public void GetAllTimeTopCommentsTest()
-        {
-            var topCommentIds = GetTestPosts()
-                .SelectMany(p => p.Comments)
-                .Where(c => c.Score > 30)
-                .Select(c => new { c.Id, c.Score })
-                .OrderByDescending(c => c.Score)
-                .Take(50).ToArray();
+        //[TestMethod]
+        //public void GetAllTimeTopCommentsTest()
+        //{
+        //    var topCommentIds = GetTestPosts()
+        //        .SelectMany(p => p.Comments)
+        //        .Where(c => c.Score > 30)
+        //        .Select(c => new { c.Id, c.Score })
+        //        .OrderByDescending(c => c.Score)
+        //        .Take(50).ToArray();
 
-            foreach (var c in topCommentIds)
-            {
-                Console.WriteLine(c);
-            }
-        }
+        //    foreach (var c in topCommentIds)
+        //    {
+        //        Console.WriteLine(c);
+        //    }
+        //}
 
         private static IEnumerable<Post> GetTestPosts()
         {

@@ -1,14 +1,14 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HabrApi
+namespace HabrApi.EntityModel
 {
-    public class Comment
+    public partial class Comment
     {
         /*
-			<a href="http://habrahabr.ru/users/Kobs/" class="avatar"><img src="http://habrahabr.ru/i/avatars/stub-user-small.gif" alt="" /></a>
-			<a href="http://habrahabr.ru/users/Kobs/" class="username">Kobs</a>
+            <a href="http://habrahabr.ru/users/Kobs/" class="avatar"><img src="http://habrahabr.ru/i/avatars/stub-user-small.gif" alt="" /></a>
+            <a href="http://habrahabr.ru/users/Kobs/" class="username">Kobs</a> 
          */
 
         private static readonly Regex CommentRegex = new Regex(
@@ -21,19 +21,7 @@ namespace HabrApi
             "<a .*? class=\"username\">(?<user>.*?)</a>" +
             ".*?" +
             "<div class=\"message.*?\">(?<text>.*?)</div>",
-                                                              RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
-
-        public string Id { get; set; }
-        public int Score { get; set; }
-        public int ScorePlus { get; set; }
-        public int ScoreMinus { get; set; }
-        public string Text { get; set; }
-        public string Url { get; set; }
-        public string PostUrl { get; set; }
-        public string PostTitle { get; set; }
-        public int PostId { get; set; }
-        public string UserName { get; set; }
-        public string Avatar { get; set; }
+            RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
         public static IEnumerable<Comment> Parse(string postHtml, Post post)
         {
@@ -55,7 +43,7 @@ namespace HabrApi
 
         private static int ParseCommentRating(string commentRating)
         {
-            return int.Parse(commentRating.Replace("�", "-"));
+            return int.Parse(commentRating.Replace("–", "-"));
         }
 
         private static string GetCommentUrl(int postId, string commentId)
