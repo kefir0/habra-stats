@@ -6,7 +6,7 @@ namespace HabrApi
     {
         public void InsertPost(Post post)
         {
-            using (var ctx = new HabraStatsEntities())
+            using (var ctx = HabraStatsEntities.CreateInstance())
             {
                 foreach (var comment in post.Comments)
                 {

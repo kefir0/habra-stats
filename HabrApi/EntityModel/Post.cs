@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Data.Objects.DataClasses;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace HabrApi.EntityModel
 {
-    public partial class Post
+    public class Post
     {
         public const string UrlFormat = "http://habrahabr.ru/post/{0}/";
         private static readonly Regex TitleRegex = new Regex("<title>(.*?)</title>", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
@@ -21,6 +20,14 @@ namespace HabrApi.EntityModel
         {
             get { return (DateTime.Now - Date).TotalDays; }
         }
+
+        public Comment[] Comments { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public string Title { get; set; }
+
+        public int Id { get; set; }
 
         public static string GetUrl(int postId)
         {
@@ -50,10 +57,7 @@ namespace HabrApi.EntityModel
 
                 if (!skipComments)
                 {
-                    foreach (var comment in Comment.Parse(html, post))
-                    {
-                        post.Comments.Add(comment);
-                    }
+                    post.Comments = Comment.Parse(html, post).ToArray();
                 }
 
                 return post;

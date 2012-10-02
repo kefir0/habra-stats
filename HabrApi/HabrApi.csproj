@@ -57,6 +57,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>HabraStats.edmx</DependentUpon>
     </Compile>
+    <Compile Include="EntityModel\HabraStatsEntities.Ext.cs" />
     <Compile Include="EntityModel\Post.cs">
       <SubType>Code</SubType>
     </Compile>
