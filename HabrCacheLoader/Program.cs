@@ -41,7 +41,7 @@ namespace HabrCacheLoader
             foreach (var p in habr.GetCachedPosts(parallelBatchSize: 256))
             {
                 loadedCount++;
-                commentCount.Add(p.Comments.Count);
+                commentCount.Add(p.Comments.Length);
                 Console.WriteLine("P/S: {0}; Avg comment count: {1}", (int) (loadedCount/(DateTime.Now - startTime).TotalSeconds), (int) commentCount.Average());
             }
         }

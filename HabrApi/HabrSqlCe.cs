@@ -6,10 +6,12 @@ namespace HabrApi
     {
         public void InsertPost(Post post)
         {
-            // TODO: Extend Db classes and get rid of mapping.
-            using (var ctx = new HabraStatsEntities1())
+            using (var ctx = new HabraStatsEntities())
             {
-                ctx.Posts.AddObject(post);
+                foreach (var comment in post.Comments)
+                {
+                    ctx.Comments.AddObject(comment);
+                }
                 ctx.SaveChanges();
             }
         }
