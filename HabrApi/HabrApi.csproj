@@ -70,9 +70,6 @@
     <EmbeddedResource Include="CommentStats.xslt" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="HabraStats.sdf" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="App.Config" />
     <EntityDeploy Include="EntityModel\HabraStats.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
