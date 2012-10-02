@@ -49,13 +49,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="EntityModel\Comment.Ext.cs" />
+    <Compile Include="EntityModel\Comment.Ext.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="EntityModel\HabraStats.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>HabraStats.edmx</DependentUpon>
     </Compile>
-    <Compile Include="EntityModel\Post.Ext.cs" />
+    <Compile Include="EntityModel\Post.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Habr.cs" />
     <Compile Include="HabrSqlCe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

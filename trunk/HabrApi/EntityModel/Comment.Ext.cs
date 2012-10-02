@@ -9,12 +9,13 @@ namespace HabrApi.EntityModel
         /*
             <a href="http://habrahabr.ru/users/Kobs/" class="avatar"><img src="http://habrahabr.ru/i/avatars/stub-user-small.gif" alt="" /></a>
             <a href="http://habrahabr.ru/users/Kobs/" class="username">Kobs</a> 
+            <span class="score" title="Всего 74: &uarr;65 и &darr;9">+56</span>
          */
 
         private static readonly Regex CommentRegex = new Regex(
-            "<div class=\"comment_item\" id=\"(?<id>.*?)\"" +
+            "<div class=\"comment_item\" id=\"comment_(?<id>[0-9]+)\"" +
             ".*?" +
-            "<span class=\"score\".*?>(?<score>.*?)</span>" +
+            "<span class=\"score\" title=\".*?&uarr;(?<plus>[0-9]+) и &darr;(?<minus>[0-9]+)\">" +
             ".*?" +
             "<a .*? class=\"avatar\"><img src=\"(?<avatar>.*?)\".*?/></a>" +
             ".*?" +
@@ -29,8 +30,9 @@ namespace HabrApi.EntityModel
                 .Select(c =>
                         new Comment
                             {
-                                Id = c.Groups["id"].Value,
-                                Score = ParseCommentRating(c.Groups["score"].Value),
+                                Id = int.Parse(c.Groups["id"].Value),
+                                ScorePlus = int.Parse(c.Groups["plus"].Value),
+                                ScoreMinus = int.Parse(c.Groups["minus"].Value),
                                 Text = c.Groups["text"].Value.Trim(),
                                 Url = GetCommentUrl(post.Id, c.Groups["id"].Value),
                                 PostUrl = post.Url,
@@ -40,15 +42,19 @@ namespace HabrApi.EntityModel
                             });
         }
 
-
-        private static int ParseCommentRating(string commentRating)
+        partial void OnScoreMinusChanged()
         {
-            return int.Parse(commentRating.Replace("–", "-"));
+            Score = ScorePlus - ScoreMinus;
+        }
+
+        partial void OnScorePlusChanged()
+        {
+            Score = ScorePlus - ScoreMinus;
         }
 
         private static string GetCommentUrl(int postId, string commentId)
         {
-            return string.Format(Post.UrlFormat, postId).TrimEnd('/') + "#" + commentId;
+            return string.Format(Post.UrlFormat, postId).TrimEnd('/') + "#comment_" + commentId;
         }
 
         public override string ToString()
