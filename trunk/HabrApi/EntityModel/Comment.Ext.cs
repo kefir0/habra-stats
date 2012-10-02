@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,7 @@ namespace HabrApi.EntityModel
         /*
             <a href="http://habrahabr.ru/users/Kobs/" class="avatar"><img src="http://habrahabr.ru/i/avatars/stub-user-small.gif" alt="" /></a>
             <a href="http://habrahabr.ru/users/Kobs/" class="username">Kobs</a> 
+            <time datetime="2012-09-26T17:08:29+04:00">26 сентября 2012 в 17:08</time>
             <span class="score" title="Всего 74: &uarr;65 и &darr;9">+56</span>
          */
 
@@ -20,6 +22,8 @@ namespace HabrApi.EntityModel
             "<a .*? class=\"avatar\"><img src=\"(?<avatar>.*?)\".*?/></a>" +
             ".*?" +
             "<a .*? class=\"username\">(?<user>.*?)</a>" +
+            ".*?" +
+            "<time datetime=\"(?<date>.*?)\">" +
             ".*?" +
             "<div class=\"message.*?\">(?<text>.*?)</div>",
             RegexOptions.Singleline | RegexOptions.Compiled);
@@ -39,6 +43,7 @@ namespace HabrApi.EntityModel
                                 PostTitle = post.Title,
                                 UserName = c.Groups["user"].Value,
                                 Avatar = c.Groups["avatar"].Value,
+                                Date = DateTime.Parse(c.Groups["date"].Value)
                             });
         }
 
