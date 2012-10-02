@@ -17,8 +17,8 @@ namespace HabrApiTests
         [TestMethod]
         public void TestGetPosts()
         {
-            var posts = GetTestPosts().Take(10).OrderByDescending(p => p.Comments.Count).ToArray();
-            Assert.IsTrue(posts.Length == 10);
+            var posts = GetTestPosts().Take(100).OrderByDescending(p => p.Comments.Count).ToArray();
+            Assert.IsTrue(posts.Length == 100);
         }
 
         [TestMethod]

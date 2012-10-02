@@ -21,7 +21,7 @@ namespace HabrApi.EntityModel
             "<a .*? class=\"username\">(?<user>.*?)</a>" +
             ".*?" +
             "<div class=\"message.*?\">(?<text>.*?)</div>",
-            RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            RegexOptions.Singleline | RegexOptions.Compiled);
 
         public static IEnumerable<Comment> Parse(string postHtml, Post post)
         {

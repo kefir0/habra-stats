@@ -47,6 +47,8 @@ namespace HabraStatsService
         {
             try
             {
+                // TODO: We need to sort by comment date, not post date!!!
+
                 var habr = new Habr();
                 Log("Loading month posts");
                 var monthPosts = habr.GetRecentPosts().TakeWhile(p => p.DaysOld < 35).ToArray();
