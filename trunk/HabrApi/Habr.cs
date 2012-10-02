@@ -126,14 +126,15 @@ namespace HabrApi
         /// <summary>
         /// Enumerates all valid posts in cache.
         /// </summary>
-        public IEnumerable<Post> GetCachedPosts(int? maxPostId = null)
+        public IEnumerable<Post> GetCachedPosts(int? maxPostId = null, int? parallelBatchSize = null)
         {
             var lastPostId = maxPostId ?? GetLastPostId();
+            var batchSize = parallelBatchSize ?? ParallelBatchSize;
 
-            for (var i = 0; i <= lastPostId; i += ParallelBatchSize)
+            for (var i = 0; i <= lastPostId; i += batchSize)
             {
                 var parallelResults = new ConcurrentBag<Post>();
-                Parallel.For(i, i + ParallelBatchSize, j =>
+                Parallel.For(i, i + batchSize, j =>
                 {
                     if (!IsInCache(j)) return;
                     var post = Post.Parse(File.ReadAllText(GetCachePath(Post.GetUrl(j))), j);
