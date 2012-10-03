@@ -11,7 +11,7 @@ namespace HabrApiTests
         {
             var habr = new Habr();
             var db = new HabrSqlCe();
-            db.InsertPost(habr.DownloadPost(1));
+            db.UpsertPost(habr.DownloadPost(1));
         }
     }
 }
