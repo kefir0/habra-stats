@@ -41,6 +41,7 @@ namespace HabrApi.EntityModel
                                 Url = GetCommentUrl(post.Id, c.Groups["id"].Value),
                                 PostUrl = post.Url,
                                 PostTitle = post.Title,
+                                PostId = post.Id,
                                 UserName = c.Groups["user"].Value,
                                 Avatar = c.Groups["avatar"].Value,
                                 Date = DateTime.Parse(c.Groups["date"].Value)
