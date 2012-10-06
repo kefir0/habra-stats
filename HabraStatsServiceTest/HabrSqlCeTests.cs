@@ -11,7 +11,10 @@ namespace HabrApiTests
         {
             var habr = new Habr();
             var db = new HabrSqlCe();
-            db.UpsertPost(habr.DownloadPost(1));
+            
+            // Run twice to ensure update
+            db.UpsertPost(habr.DownloadPost(100006));
+            db.UpsertPost(habr.DownloadPost(100006));
         }
     }
 }

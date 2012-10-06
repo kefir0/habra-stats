@@ -5,11 +5,12 @@ using System.Text.RegularExpressions;
 
 namespace HabrApi.EntityModel
 {
-    public class Post
+    public partial class Post
     {
         public const string UrlFormat = "http://habrahabr.ru/post/{0}/";
-        private static readonly Regex TitleRegex = new Regex("<title>(.*?)</title>", RegexOptions.Singleline | RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        private static readonly Regex TitleRegex = new Regex("<title>(.*?)</title>", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex DateRegex = new Regex("<div class=\"published\">(.*?)</div>", RegexOptions.Singleline | RegexOptions.Compiled);
+        private static readonly Regex ScoreRegex = new Regex("<span class=\"score\" .*?>(.*?)</span>", RegexOptions.Singleline | RegexOptions.Compiled);
 
         public string Url
         {
@@ -20,14 +21,6 @@ namespace HabrApi.EntityModel
         {
             get { return (DateTime.Now - Date).TotalDays; }
         }
-
-        public Comment[] Comments { get; set; }
-
-        public DateTime Date { get; set; }
-
-        public string Title { get; set; }
-
-        public int Id { get; set; }
 
         public static string GetUrl(int postId)
         {
@@ -47,17 +40,23 @@ namespace HabrApi.EntityModel
             try
             {
                 var title = TitleRegex.Match(html).Groups[1].Value;
+                var score = int.Parse(ScoreRegex.Match(html).Groups[1].Value);
                 var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" в ", " "), CultureInfo.GetCultureInfo("ru-RU"));
                 var post = new Post
                                {
                                    Id = id,
                                    Title = title,
-                                   Date = date
+                                   Date = date,
+                                   Score = score
                                };
 
                 if (!skipComments)
                 {
-                    post.Comments = Comment.Parse(html, post).ToArray();
+                    //post.Comments = Comment.Parse(html, post).ToArray();
+                    foreach (var comment in Comment.Parse(html, post))
+                    {
+                        post.Comments.Add(comment);
+                    }
                 }
 
                 return post;

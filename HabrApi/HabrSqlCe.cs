@@ -11,10 +11,8 @@ namespace HabrApi
         {
             using (var ctx = HabraStatsEntities.CreateInstance())
             {
-                foreach (var comment in post.Comments)
-                {
-                    UpsertComment(ctx, comment);
-                }
+                ctx.ExecuteStoreCommand("DELETE FROM POSTS WHERE ID=" + post.Id);
+                ctx.Posts.AddObject(post);
                 ctx.SaveChanges();
             }
         }
@@ -27,16 +25,16 @@ namespace HabrApi
             }
         }
 
-        private static void UpsertComment(HabraStatsEntities ctx, Comment comment)
-        {
-            if (ctx.Comments.SingleOrDefault(c => c.Id == comment.Id) != null)
-            {
-                ctx.Comments.ApplyCurrentValues(comment);
-            }
-            else
-            {
-                ctx.Comments.AddObject(comment);
-            }
-        }
+        //private static void UpsertComment(HabraStatsEntities ctx, Comment comment)
+        //{
+        //    if (ctx.Comments.SingleOrDefault(c => c.Id == comment.Id) != null)
+        //    {
+        //        ctx.Comments.ApplyCurrentValues(comment);
+        //    }
+        //    else
+        //    {
+        //        ctx.Comments.AddObject(comment);
+        //    }
+        //}
     }
 }

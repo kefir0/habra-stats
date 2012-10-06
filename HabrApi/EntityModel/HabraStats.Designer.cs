@@ -17,6 +17,12 @@ using System.Runtime.Serialization;
 using System.Xml.Serialization;
 
 [assembly: EdmSchemaAttribute()]
+#region EDM Relationship Metadata
+
+[assembly: EdmRelationshipAttribute("habrastatsModel", "FK_Comments_Post", "Post", System.Data.Metadata.Edm.RelationshipMultiplicity.One, typeof(HabrApi.EntityModel.Post), "Comment", System.Data.Metadata.Edm.RelationshipMultiplicity.Many, typeof(HabrApi.EntityModel.Comment), true)]
+
+#endregion
+
 namespace HabrApi.EntityModel
 {
     #region Contexts
@@ -80,6 +86,22 @@ namespace HabrApi.EntityModel
             }
         }
         private ObjectSet<Comment> _Comments;
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        public ObjectSet<Post> Posts
+        {
+            get
+            {
+                if ((_Posts == null))
+                {
+                    _Posts = base.CreateObjectSet<Post>("Posts");
+                }
+                return _Posts;
+            }
+        }
+        private ObjectSet<Post> _Posts;
 
         #endregion
 
@@ -91,6 +113,14 @@ namespace HabrApi.EntityModel
         public void AddToComments(Comment comment)
         {
             base.AddObject("Comments", comment);
+        }
+    
+        /// <summary>
+        /// Deprecated Method for adding a new object to the Posts EntitySet. Consider using the .Add method of the associated ObjectSet&lt;T&gt; property instead.
+        /// </summary>
+        public void AddToPosts(Post post)
+        {
+            base.AddObject("Posts", post);
         }
 
         #endregion
@@ -118,27 +148,21 @@ namespace HabrApi.EntityModel
         /// <param name="text">Initial value of the Text property.</param>
         /// <param name="url">Initial value of the Url property.</param>
         /// <param name="postId">Initial value of the PostId property.</param>
-        /// <param name="postUrl">Initial value of the PostUrl property.</param>
-        /// <param name="postTitle">Initial value of the PostTitle property.</param>
         /// <param name="date">Initial value of the Date property.</param>
         /// <param name="score">Initial value of the Score property.</param>
         /// <param name="scorePlus">Initial value of the ScorePlus property.</param>
-        /// <param name="scoreMinus">Initial value of the ScoreMinus property.</param>
         /// <param name="userName">Initial value of the UserName property.</param>
         /// <param name="avatar">Initial value of the Avatar property.</param>
-        public static Comment CreateComment(global::System.Int32 id, global::System.String text, global::System.String url, global::System.Int32 postId, global::System.String postUrl, global::System.String postTitle, global::System.DateTime date, global::System.Int32 score, global::System.Int32 scorePlus, global::System.Int32 scoreMinus, global::System.String userName, global::System.String avatar)
+        public static Comment CreateComment(global::System.Int32 id, global::System.String text, global::System.String url, global::System.Int32 postId, global::System.DateTime date, global::System.Int32 score, global::System.Int32 scorePlus, global::System.String userName, global::System.String avatar)
         {
             Comment comment = new Comment();
             comment.Id = id;
             comment.Text = text;
             comment.Url = url;
             comment.PostId = postId;
-            comment.PostUrl = postUrl;
-            comment.PostTitle = postTitle;
             comment.Date = date;
             comment.Score = score;
             comment.ScorePlus = scorePlus;
-            comment.ScoreMinus = scoreMinus;
             comment.UserName = userName;
             comment.Avatar = avatar;
             return comment;
@@ -252,54 +276,6 @@ namespace HabrApi.EntityModel
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.String PostUrl
-        {
-            get
-            {
-                return _PostUrl;
-            }
-            set
-            {
-                OnPostUrlChanging(value);
-                ReportPropertyChanging("PostUrl");
-                _PostUrl = StructuralObject.SetValidValue(value, false, "PostUrl");
-                ReportPropertyChanged("PostUrl");
-                OnPostUrlChanged();
-            }
-        }
-        private global::System.String _PostUrl;
-        partial void OnPostUrlChanging(global::System.String value);
-        partial void OnPostUrlChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String PostTitle
-        {
-            get
-            {
-                return _PostTitle;
-            }
-            set
-            {
-                OnPostTitleChanging(value);
-                ReportPropertyChanging("PostTitle");
-                _PostTitle = StructuralObject.SetValidValue(value, false, "PostTitle");
-                ReportPropertyChanged("PostTitle");
-                OnPostTitleChanged();
-            }
-        }
-        private global::System.String _PostTitle;
-        partial void OnPostTitleChanging(global::System.String value);
-        partial void OnPostTitleChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
         public global::System.DateTime Date
         {
             get
@@ -372,30 +348,6 @@ namespace HabrApi.EntityModel
         /// </summary>
         [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
         [DataMemberAttribute()]
-        public global::System.Int32 ScoreMinus
-        {
-            get
-            {
-                return _ScoreMinus;
-            }
-            set
-            {
-                OnScoreMinusChanging(value);
-                ReportPropertyChanging("ScoreMinus");
-                _ScoreMinus = StructuralObject.SetValidValue(value, "ScoreMinus");
-                ReportPropertyChanged("ScoreMinus");
-                OnScoreMinusChanged();
-            }
-        }
-        private global::System.Int32 _ScoreMinus;
-        partial void OnScoreMinusChanging(global::System.Int32 value);
-        partial void OnScoreMinusChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
         public global::System.String UserName
         {
             get
@@ -438,6 +390,208 @@ namespace HabrApi.EntityModel
         private global::System.String _Avatar;
         partial void OnAvatarChanging(global::System.String value);
         partial void OnAvatarChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("habrastatsModel", "FK_Comments_Post", "Post")]
+        public Post Post
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Post>("habrastatsModel.FK_Comments_Post", "Post").Value;
+            }
+            set
+            {
+                ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Post>("habrastatsModel.FK_Comments_Post", "Post").Value = value;
+            }
+        }
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [BrowsableAttribute(false)]
+        [DataMemberAttribute()]
+        public EntityReference<Post> PostReference
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedReference<Post>("habrastatsModel.FK_Comments_Post", "Post");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedReference<Post>("habrastatsModel.FK_Comments_Post", "Post", value);
+                }
+            }
+        }
+
+        #endregion
+
+    }
+    
+    /// <summary>
+    /// No Metadata Documentation available.
+    /// </summary>
+    [EdmEntityTypeAttribute(NamespaceName="habrastatsModel", Name="Post")]
+    [Serializable()]
+    [DataContractAttribute(IsReference=true)]
+    public partial class Post : EntityObject
+    {
+        #region Factory Method
+    
+        /// <summary>
+        /// Create a new Post object.
+        /// </summary>
+        /// <param name="id">Initial value of the Id property.</param>
+        /// <param name="title">Initial value of the Title property.</param>
+        /// <param name="score">Initial value of the Score property.</param>
+        /// <param name="date">Initial value of the Date property.</param>
+        public static Post CreatePost(global::System.Int32 id, global::System.String title, global::System.Int32 score, global::System.DateTime date)
+        {
+            Post post = new Post();
+            post.Id = id;
+            post.Title = title;
+            post.Score = score;
+            post.Date = date;
+            return post;
+        }
+
+        #endregion
+
+        #region Simple Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=true, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Id
+        {
+            get
+            {
+                return _Id;
+            }
+            set
+            {
+                if (_Id != value)
+                {
+                    OnIdChanging(value);
+                    ReportPropertyChanging("Id");
+                    _Id = StructuralObject.SetValidValue(value, "Id");
+                    ReportPropertyChanged("Id");
+                    OnIdChanged();
+                }
+            }
+        }
+        private global::System.Int32 _Id;
+        partial void OnIdChanging(global::System.Int32 value);
+        partial void OnIdChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.String Title
+        {
+            get
+            {
+                return _Title;
+            }
+            set
+            {
+                OnTitleChanging(value);
+                ReportPropertyChanging("Title");
+                _Title = StructuralObject.SetValidValue(value, false, "Title");
+                ReportPropertyChanged("Title");
+                OnTitleChanged();
+            }
+        }
+        private global::System.String _Title;
+        partial void OnTitleChanging(global::System.String value);
+        partial void OnTitleChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 Score
+        {
+            get
+            {
+                return _Score;
+            }
+            set
+            {
+                OnScoreChanging(value);
+                ReportPropertyChanging("Score");
+                _Score = StructuralObject.SetValidValue(value, "Score");
+                ReportPropertyChanged("Score");
+                OnScoreChanged();
+            }
+        }
+        private global::System.Int32 _Score;
+        partial void OnScoreChanging(global::System.Int32 value);
+        partial void OnScoreChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.DateTime Date
+        {
+            get
+            {
+                return _Date;
+            }
+            set
+            {
+                OnDateChanging(value);
+                ReportPropertyChanging("Date");
+                _Date = StructuralObject.SetValidValue(value, "Date");
+                ReportPropertyChanged("Date");
+                OnDateChanged();
+            }
+        }
+        private global::System.DateTime _Date;
+        partial void OnDateChanging(global::System.DateTime value);
+        partial void OnDateChanged();
+
+        #endregion
+
+        #region Navigation Properties
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [XmlIgnoreAttribute()]
+        [SoapIgnoreAttribute()]
+        [DataMemberAttribute()]
+        [EdmRelationshipNavigationPropertyAttribute("habrastatsModel", "FK_Comments_Post", "Comment")]
+        public EntityCollection<Comment> Comments
+        {
+            get
+            {
+                return ((IEntityWithRelationships)this).RelationshipManager.GetRelatedCollection<Comment>("habrastatsModel.FK_Comments_Post", "Comment");
+            }
+            set
+            {
+                if ((value != null))
+                {
+                    ((IEntityWithRelationships)this).RelationshipManager.InitializeRelatedCollection<Comment>("habrastatsModel.FK_Comments_Post", "Comment", value);
+                }
+            }
+        }
 
         #endregion
 

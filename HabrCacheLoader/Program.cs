@@ -45,7 +45,7 @@ namespace HabrCacheLoader
             {
                 db.UpsertPost(p);
                 loadedCount++;
-                commentCount.Add(p.Comments.Length);
+                commentCount.Add(p.Comments.Count);
                 Console.WriteLine("P/S: {0}; Avg comment count: {1}; id: {2}", (int) (loadedCount/(DateTime.Now - startTime).TotalSeconds), (int) commentCount.Average(), p.Id);
             }
         }
