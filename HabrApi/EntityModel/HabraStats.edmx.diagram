@@ -4,8 +4,8 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="12899984c53948729f3d4f9ebf2b70d4" Name="Diagram1">
-        <EntityTypeShape EntityType="HabraStatsModel.Comment" Width="1.5" PointX="3" PointY="1" IsExpanded="true" />
+      <Diagram DiagramId="ba7da6bc63224f439f2e45c76668c9be" Name="Diagram1">
+        <EntityTypeShape EntityType="habrastatsModel.Comment" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
