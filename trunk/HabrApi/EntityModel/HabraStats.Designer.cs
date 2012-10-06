@@ -104,7 +104,7 @@ namespace HabrApi.EntityModel
     /// <summary>
     /// No Metadata Documentation available.
     /// </summary>
-    [EdmEntityTypeAttribute(NamespaceName="HabraStatsModel", Name="Comment")]
+    [EdmEntityTypeAttribute(NamespaceName="habrastatsModel", Name="Comment")]
     [Serializable()]
     [DataContractAttribute(IsReference=true)]
     public partial class Comment : EntityObject

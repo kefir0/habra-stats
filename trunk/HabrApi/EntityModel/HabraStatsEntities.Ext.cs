@@ -3,7 +3,7 @@
     public partial class HabraStatsEntities
     {
         public const string DefaultConnectionString =
-            @"metadata=res://*/EntityModel.HabraStats.csdl|res://*/EntityModel.HabraStats.ssdl|res://*/EntityModel.HabraStats.msl;provider=System.Data.SqlServerCe.4.0;provider connection string="";data source=E:\HabraStats.sdf;max database size=4000""";
+            @"metadata=res://*/EntityModel.HabraStats.csdl|res://*/EntityModel.HabraStats.ssdl|res://*/EntityModel.HabraStats.msl;provider=System.Data.SqlClient;provider connection string="";data source=NAXAH-PC\SQLEXPRESS;initial catalog=habrastats;integrated security=True;MultipleActiveResultSets=True;App=EntityFramework""";
 
         public static HabraStatsEntities CreateInstance()
         {
