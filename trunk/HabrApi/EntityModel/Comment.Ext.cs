@@ -28,6 +28,18 @@ namespace HabrApi.EntityModel
             "<div class=\"message.*?\">(?<text>.*?)</div>",
             RegexOptions.Singleline | RegexOptions.Compiled);
 
+        private int _scoreMinus;
+
+        public int ScoreMinus
+        {
+            get { return _scoreMinus; }
+            set
+            {
+                _scoreMinus = value;
+                OnScorePlusChanged();
+            }
+        }
+
         public static IEnumerable<Comment> Parse(string postHtml, Post post)
         {
             return CommentRegex.Matches(postHtml).OfType<Match>()
@@ -39,18 +51,11 @@ namespace HabrApi.EntityModel
                                 ScoreMinus = int.Parse(c.Groups["minus"].Value),
                                 Text = c.Groups["text"].Value.Trim(),
                                 Url = GetCommentUrl(post.Id, c.Groups["id"].Value),
-                                PostUrl = post.Url,
-                                PostTitle = post.Title,
                                 PostId = post.Id,
                                 UserName = c.Groups["user"].Value,
                                 Avatar = c.Groups["avatar"].Value,
                                 Date = DateTime.Parse(c.Groups["date"].Value)
                             });
-        }
-
-        partial void OnScoreMinusChanged()
-        {
-            Score = ScorePlus - ScoreMinus;
         }
 
         partial void OnScorePlusChanged()

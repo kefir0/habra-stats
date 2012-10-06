@@ -5,7 +5,9 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="ba7da6bc63224f439f2e45c76668c9be" Name="Diagram1">
-        <EntityTypeShape EntityType="habrastatsModel.Comment" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="habrastatsModel.Comment" Width="1.5" PointX="11.003059526441181" PointY="1.8627331563563707" />
+        <EntityTypeShape EntityType="habrastatsModel.Post" Width="1.5" PointX="1.4550415451894707" PointY="9.3047468258555739" />
+        <AssociationConnector Association="habrastatsModel.FK_Comments_Post" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

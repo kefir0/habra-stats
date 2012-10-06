@@ -5,75 +5,134 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="habrastatsModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
-  <EntityContainer Name="habrastatsModelStoreContainer">
-    <EntitySet Name="Comments" EntityType="habrastatsModel.Store.Comments" store:Type="Tables" Schema="dbo" />
-  </EntityContainer>
-  <EntityType Name="Comments">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="int" Nullable="false" />
-    <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
-    <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="100" />
-    <Property Name="PostId" Type="int" Nullable="false" />
-    <Property Name="PostUrl" Type="nvarchar" Nullable="false" MaxLength="100" />
-    <Property Name="PostTitle" Type="nvarchar" Nullable="false" MaxLength="1000" />
-    <Property Name="Date" Type="datetime" Nullable="false" />
-    <Property Name="Score" Type="int" Nullable="false" />
-    <Property Name="ScorePlus" Type="int" Nullable="false" />
-    <Property Name="ScoreMinus" Type="int" Nullable="false" />
-    <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="200" />
-    <Property Name="Avatar" Type="nvarchar" Nullable="false" MaxLength="100" />
-  </EntityType>
-</Schema></edmx:StorageModels>
+        <EntityContainer Name="habrastatsModelStoreContainer">
+          <EntitySet Name="Comments" EntityType="habrastatsModel.Store.Comments" store:Type="Tables" Schema="dbo" />
+          <EntitySet Name="Posts" EntityType="habrastatsModel.Store.Posts" store:Type="Tables" Schema="dbo" />
+          <AssociationSet Name="FK_Comments_Post" Association="habrastatsModel.Store.FK_Comments_Post">
+            <End Role="Posts" EntitySet="Posts" />
+            <End Role="Comments" EntitySet="Comments" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Comments">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="100" />
+          <Property Name="PostId" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+          <Property Name="ScorePlus" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" Nullable="false" MaxLength="200" />
+          <Property Name="Avatar" Type="nvarchar" Nullable="false" MaxLength="100" />
+        </EntityType>
+        <EntityType Name="Posts">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="1000" />
+          <Property Name="Score" Type="int" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_Comments_Post">
+          <End Role="Posts" Type="habrastatsModel.Store.Posts" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Comments" Type="habrastatsModel.Store.Comments" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Posts">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comments">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="habrastatsModel" Alias="Self" p1:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:p1="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
         <EntityContainer Name="HabraStatsEntities" p1:LazyLoadingEnabled="true">
           <EntitySet Name="Comments" EntityType="habrastatsModel.Comment" />
+          <EntitySet Name="Posts" EntityType="habrastatsModel.Post" />
+          <AssociationSet Name="FK_Comments_Post" Association="habrastatsModel.FK_Comments_Post">
+            <End Role="Post" EntitySet="Posts" />
+            <End Role="Comment" EntitySet="Comments" />
+          </AssociationSet>
         </EntityContainer>
         <EntityType Name="Comment">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
-          <Property Name="Id" Type="Int32" Nullable="false" />
-          <Property Name="Text" Type="String" Nullable="false" MaxLength="Max" Unicode="true" FixedLength="false" />
-          <Property Name="Url" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="PostId" Type="Int32" Nullable="false" />
-          <Property Name="PostUrl" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
-          <Property Name="PostTitle" Type="String" Nullable="false" MaxLength="1000" Unicode="true" FixedLength="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="Score" Type="Int32" Nullable="false" />
-          <Property Name="ScorePlus" Type="Int32" Nullable="false" />
-          <Property Name="ScoreMinus" Type="Int32" Nullable="false" />
-          <Property Name="UserName" Type="String" Nullable="false" MaxLength="200" Unicode="true" FixedLength="false" />
-          <Property Name="Avatar" Type="String" Nullable="false" MaxLength="100" Unicode="true" FixedLength="false" />
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Text" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Url" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="PostId" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
+          <Property Type="Int32" Name="Score" Nullable="false" />
+          <Property Type="Int32" Name="ScorePlus" Nullable="false" />
+          <Property Type="String" Name="UserName" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Type="String" Name="Avatar" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="Post" Relationship="habrastatsModel.FK_Comments_Post" FromRole="Comment" ToRole="Post" />
         </EntityType>
+        <EntityType Name="Post">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Type="Int32" Name="Id" Nullable="false" />
+          <Property Type="String" Name="Title" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
+          <Property Type="Int32" Name="Score" Nullable="false" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="0" />
+          <NavigationProperty Name="Comments" Relationship="habrastatsModel.FK_Comments_Post" FromRole="Post" ToRole="Comment" />
+        </EntityType>
+        <Association Name="FK_Comments_Post">
+          <End Type="habrastatsModel.Post" Role="Post" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Type="habrastatsModel.Comment" Role="Comment" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Post">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Comment">
+              <PropertyRef Name="PostId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
     <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
   <EntityContainerMapping StorageEntityContainer="habrastatsModelStoreContainer" CdmEntityContainer="HabraStatsEntities">
-    <EntitySetMapping Name="Comments">
-      <EntityTypeMapping TypeName="IsTypeOf(habrastatsModel.Comment)">
-        <MappingFragment StoreEntitySet="Comments">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Text" ColumnName="Text" />
-          <ScalarProperty Name="Url" ColumnName="Url" />
-          <ScalarProperty Name="PostId" ColumnName="PostId" />
-          <ScalarProperty Name="PostUrl" ColumnName="PostUrl" />
-          <ScalarProperty Name="PostTitle" ColumnName="PostTitle" />
-          <ScalarProperty Name="Date" ColumnName="Date" />
-          <ScalarProperty Name="Score" ColumnName="Score" />
-          <ScalarProperty Name="ScorePlus" ColumnName="ScorePlus" />
-          <ScalarProperty Name="ScoreMinus" ColumnName="ScoreMinus" />
-          <ScalarProperty Name="UserName" ColumnName="UserName" />
-          <ScalarProperty Name="Avatar" ColumnName="Avatar" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-  </EntityContainerMapping>
+          <EntitySetMapping Name="Comments">
+            <EntityTypeMapping TypeName="habrastatsModel.Comment">
+              <MappingFragment StoreEntitySet="Comments">
+                <ScalarProperty Name="Avatar" ColumnName="Avatar" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="ScorePlus" ColumnName="ScorePlus" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="PostId" ColumnName="PostId" />
+                <ScalarProperty Name="Url" ColumnName="Url" />
+                <ScalarProperty Name="Text" ColumnName="Text" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Posts">
+            <EntityTypeMapping TypeName="habrastatsModel.Post">
+              <MappingFragment StoreEntitySet="Posts">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="Title" ColumnName="Title" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
 </Mapping></edmx:Mappings>
   </edmx:Runtime>
   <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
@@ -86,7 +145,7 @@
     <Options>
       <DesignerInfoPropertySet>
         <DesignerProperty Name="ValidateOnBuild" Value="true" />
-        <DesignerProperty Name="EnablePluralization" Value="False" />
+        <DesignerProperty Name="EnablePluralization" Value="True" />
         <DesignerProperty Name="IncludeForeignKeysInModel" Value="True" />
         <DesignerProperty Name="CodeGenerationStrategy" Value="Default" />
       </DesignerInfoPropertySet>
