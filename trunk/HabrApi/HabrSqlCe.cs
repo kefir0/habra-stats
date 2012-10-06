@@ -5,8 +5,6 @@ namespace HabrApi
 {
     public class HabrSqlCe
     {
-        //public 
-
         public void UpsertPost(Post post)
         {
             using (var ctx = HabraStatsEntities.CreateInstance())
@@ -14,16 +12,33 @@ namespace HabrApi
                 ctx.ExecuteStoreCommand("DELETE FROM POSTS WHERE ID=" + post.Id);
                 ctx.Posts.AddObject(post);
                 ctx.SaveChanges();
+                
+                DetachPost(post, ctx);
             }
         }
 
-        public void ClearComments()
+        private static void DetachPost(Post post, HabraStatsEntities ctx)
         {
-            using (var ctx = HabraStatsEntities.CreateInstance())
+            // TODO: Think...
+            var comments = post.Comments.ToArray();
+            foreach (var comment in comments)
             {
-                ctx.ExecuteStoreCommand("DELETE FROM COMMENTS");
+                ctx.Detach(comment);
+            }
+            ctx.Detach(post);
+            foreach (var comment in comments)
+            {
+                post.Comments.Add(comment);
             }
         }
+
+        //public void ClearComments()
+        //{
+        //    using (var ctx = HabraStatsEntities.CreateInstance())
+        //    {
+        //        ctx.ExecuteStoreCommand("DELETE FROM COMMENTS");
+        //    }
+        //}
 
         //private static void UpsertComment(HabraStatsEntities ctx, Comment comment)
         //{
