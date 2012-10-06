@@ -80,7 +80,6 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Habr.cs" />
-    <Compile Include="HabrSqlCe.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatsGenerator.cs" />
     <Compile Include="Util.cs" />
