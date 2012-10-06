@@ -36,16 +36,15 @@ namespace HabrCacheLoader
         {
             var habr = new Habr();
             var db = new HabrSqlCe();
-            //db.ClearComments();
 
             var startTime = DateTime.Now;
             var loadedCount = 0;
             var commentCount = new List<int>();
             foreach (var p in habr.GetCachedPosts(parallelBatchSize: 256))
             {
-                db.UpsertPost(p);
                 loadedCount++;
                 commentCount.Add(p.Comments.Count);
+                db.UpsertPost(p);
                 Console.WriteLine("P/S: {0}; Avg comment count: {1}; id: {2}", (int) (loadedCount/(DateTime.Now - startTime).TotalSeconds), (int) commentCount.Average(), p.Id);
             }
         }

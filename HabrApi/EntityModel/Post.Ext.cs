@@ -32,7 +32,7 @@ namespace HabrApi.EntityModel
             return String.Format("[{0}] {1}", Id, Title);
         }
 
-        public static Post Parse(string html, int id, bool skipComments = false)
+        public static Post Parse(string html, int id, bool skipComments = false, bool includeZeroVoteComments = false)
         {
             if (string.IsNullOrEmpty(html))
                 return null;
@@ -53,7 +53,8 @@ namespace HabrApi.EntityModel
                 if (!skipComments)
                 {
                     //post.Comments = Comment.Parse(html, post).ToArray();
-                    foreach (var comment in Comment.Parse(html, post))
+                    foreach (var comment in Comment.Parse(html, post)
+                        .Where(comment => includeZeroVoteComments || comment.Score > 0 || comment.ScorePlus > 0))
                     {
                         post.Comments.Add(comment);
                     }
