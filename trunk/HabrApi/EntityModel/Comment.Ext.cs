@@ -28,39 +28,34 @@ namespace HabrApi.EntityModel
             "<div class=\"message.*?\">(?<text>.*?)</div>",
             RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private int _scoreMinus;
-
         public int ScoreMinus
         {
-            get { return _scoreMinus; }
-            set
-            {
-                _scoreMinus = value;
-                OnScorePlusChanged();
-            }
+            get { return Score - ScorePlus; }
         }
 
         public static IEnumerable<Comment> Parse(string postHtml, Post post)
         {
             return CommentRegex.Matches(postHtml).OfType<Match>()
-                .Select(c =>
-                        new Comment
-                            {
-                                Id = int.Parse(c.Groups["id"].Value),
-                                ScorePlus = int.Parse(c.Groups["plus"].Value),
-                                ScoreMinus = int.Parse(c.Groups["minus"].Value),
-                                Text = c.Groups["text"].Value.Trim(),
-                                Url = GetCommentUrl(post.Id, c.Groups["id"].Value),
-                                PostId = post.Id,
-                                UserName = c.Groups["user"].Value,
-                                Avatar = c.Groups["avatar"].Value,
-                                Date = DateTime.Parse(c.Groups["date"].Value)
-                            });
+                .Select(c => MatchToComment(post, c));
         }
 
-        partial void OnScorePlusChanged()
+        private static Comment MatchToComment(Post post, Match c)
         {
-            Score = ScorePlus - ScoreMinus;
+            var scorePlus = int.Parse(c.Groups["plus"].Value);
+            var scoreMinus = int.Parse(c.Groups["minus"].Value);
+            var comment = new Comment
+                              {
+                                  Id = int.Parse(c.Groups["id"].Value),
+                                  Score = scorePlus - scoreMinus,
+                                  ScorePlus = scorePlus,
+                                  Text = c.Groups["text"].Value.Trim(),
+                                  Url = GetCommentUrl(post.Id, c.Groups["id"].Value),
+                                  PostId = post.Id,
+                                  UserName = c.Groups["user"].Value,
+                                  Avatar = c.Groups["avatar"].Value,
+                                  Date = DateTime.Parse(c.Groups["date"].Value)
+                              };
+            return comment;
         }
 
         private static string GetCommentUrl(int postId, string commentId)
