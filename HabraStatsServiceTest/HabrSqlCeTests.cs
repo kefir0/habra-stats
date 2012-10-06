@@ -1,4 +1,5 @@
 ﻿using HabrApi;
+using HabrApi.EntityModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HabrApiTests
@@ -9,12 +10,15 @@ namespace HabrApiTests
         [TestMethod]
         public void Test()
         {
-            var habr = new Habr();
-            var db = new HabrSqlCe();
-            
             // Run twice to ensure update
-            db.UpsertPost(habr.DownloadPost(100006));
-            db.UpsertPost(habr.DownloadPost(100006));
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                db.UpsertPost(new Habr().DownloadPost(1));
+            }
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                db.UpsertPost(new Habr().DownloadPost(1));
+            }
         }
     }
 }

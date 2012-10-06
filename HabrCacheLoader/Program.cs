@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using HabrApi;
+using HabrApi.EntityModel;
 
 namespace HabrCacheLoader
 {
@@ -35,17 +36,29 @@ namespace HabrCacheLoader
         private static void LoadIntoDb()
         {
             var habr = new Habr();
-            var db = new HabrSqlCe();
-
             var startTime = DateTime.Now;
             var loadedCount = 0;
             var commentCount = new List<int>();
-            foreach (var p in habr.GetCachedPosts(parallelBatchSize: 256))
+            var startPost = GetMaxSqlPostId();
+
+            foreach (var p in habr.GetCachedPosts(parallelBatchSize: 256, startPostId: startPost - 1))
             {
                 loadedCount++;
                 commentCount.Add(p.Comments.Count);
-                db.UpsertPost(p);
+                using (var db = new HabraStatsEntities())
+                {
+                    db.UpsertPost(p);
+                    db.SaveChanges();
+                }
                 Console.WriteLine("P/S: {0}; Avg comment count: {1}; id: {2}", (int) (loadedCount/(DateTime.Now - startTime).TotalSeconds), (int) commentCount.Average(), p.Id);
+            }
+        }
+
+        private static int GetMaxSqlPostId()
+        {
+            using (var db = new HabraStatsEntities())
+            {
+                return db.Posts.Max(p => p.Id);
             }
         }
     }
