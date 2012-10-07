@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using HabrApi;
+using HabrApi.EntityModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace HabrApiTests
@@ -11,7 +12,7 @@ namespace HabrApiTests
         public void TestGetCommentReportMethods()
         {
             var methods = CommentFilterExtensions.GetCommentReportMethods().ToArray();
-            Assert.IsTrue(methods.Length == 12);
+            Assert.AreEqual(methods.Length,  13);
         }
 
         [TestMethod]
@@ -29,6 +30,22 @@ namespace HabrApiTests
             var reports = CommentFilterExtensions.GetAllCommentReports().ToArray();
             var count = CommentFilterExtensions.GetCommentReportMethods().GroupBy(m => m.Key.Category).Select(g => g.Count()).Aggregate((c1, c2) => c1*c2);
             Assert.IsTrue(reports.Length == count);
+        }
+
+        [TestMethod]
+        public void TestGetAllCommentReportsFunctions()
+        {
+            var reports = CommentFilterExtensions.GetAllCommentReports().ToArray();
+            foreach (var pair in reports)
+            {
+                var count = pair.Value(TestQueryable()).Count();
+                Assert.IsTrue(count == 0 || count == 2);
+            }
+        }
+
+        private IQueryable<Comment> TestQueryable()
+        {
+            return new[] {new Comment {Text = "Tst"}, new Comment {Text = "Tst"}}.AsQueryable();
         }
     }
 }
