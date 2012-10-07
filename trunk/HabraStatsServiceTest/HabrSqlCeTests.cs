@@ -47,7 +47,7 @@ namespace HabrApiTests
         public void GenerateIndexTest()
         {
             var links = CommentFilterExtensions.GetAllCommentReports()
-                .Select(r => string.Format(@"<br/><a href=""{0}.html"">{0}</a>", r.Key));
+                .Select(r => string.Format(@"<br/><a href=""{0}.html"">{0}</a>", r.Key.ToWebPageName()));
             File.WriteAllText(@"e:\habraIndex.html", links.Aggregate((s1, s2) => s1 + Environment.NewLine + s2));
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Serialization;
@@ -7,6 +8,42 @@ namespace HabrApi
 {
     public static class Util
     {
+        private static readonly Dictionary<char, string> Translit = new Dictionary<char, string>
+                                                                         {
+                                                                             {'а', "a"},
+                                                                             {'б', "b"},
+                                                                             {'в', "v"},
+                                                                             {'г', "g"},
+                                                                             {'д', "d"},
+                                                                             {'е', "e"},
+                                                                             {'ж', "zh"},
+                                                                             {'з', "z"},
+                                                                             {'и', "i"},
+                                                                             {'й', "y"},
+                                                                             {'к', "k"},
+                                                                             {'л', "l"},
+                                                                             {'м', "m"},
+                                                                             {'н', "n"},
+                                                                             {'о', "o"},
+                                                                             {'п', "p"},
+                                                                             {'р', "r"},
+                                                                             {'с', "s"},
+                                                                             {'т', "t"},
+                                                                             {'у', "u"},
+                                                                             {'ф', "f"},
+                                                                             {'х', "h"},
+                                                                             {'ц', "c"},
+                                                                             {'ч', "ch"},
+                                                                             {'ш', "sh"},
+                                                                             {'щ', "shh"},
+                                                                             {'ъ', ""},
+                                                                             {'ы', "i"},
+                                                                             {'ь', ""},
+                                                                             {'э', "e"},
+                                                                             {'ю', "u"},
+                                                                             {'я', "ya"}
+                                                                         };
+
         public static string ToXml(this object obj)
         {
             var s = new XmlSerializer(obj.GetType());
@@ -25,6 +62,35 @@ namespace HabrApi
                 s.WriteObject(writer, obj);
                 return Encoding.UTF8.GetString(writer.GetBuffer());
             }
+        }
+
+        public static string Transliterate(this string str)
+        {
+            // Borrowed here: http://www.koders.com/csharp/fidCA1D278AD6AD1BC6B2609D6B6F3060C08CE4B8E5.aspx?s=ftp
+            var sb = new StringBuilder();
+            for (var i = 0; i < str.Length; i++)
+            {
+                var isUcase = (str[i] >= 'А') && (str[i] <= 'Я');
+                var usLcase = (str[i] >= 'а') && (str[i] <= 'я');
+                if (isUcase || usLcase)
+                {
+                    var lowerCase = str[i].ToString().ToLower()[0];
+                    var letter = Translit[lowerCase];
+                    if (isUcase && letter.Length >= 1)
+                        letter = letter.Substring(0, 1).ToUpper() + letter.Substring(1);
+                    sb.Append(letter);
+                }
+                else
+                {
+                    sb.Append(str[i]);
+                }
+            }
+            return sb.ToString();
+        }
+
+        public static string ToWebPageName(this string s)
+        {
+            return s.Transliterate().Replace(" ", "_");
         }
     }
 }
