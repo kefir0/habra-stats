@@ -36,9 +36,12 @@ namespace HabraStatsService
             ftp.UseBinary = true;
             ftp.Method = WebRequestMethods.Ftp.UploadFile;
 
-            using (var writer = new BinaryWriter(ftp.GetRequestStream()))
+            using (var requestStream = ftp.GetRequestStream())
             {
-                writer.Write(data);
+                using (var writer = new BinaryWriter(requestStream))
+                {
+                    writer.Write(data);
+                }
             }
         }
     }
