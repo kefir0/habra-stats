@@ -24,7 +24,7 @@ namespace HabrCacheLoader
             Console.WriteLine("Posts to load: " + notCachedPosts.Length);
             foreach (var id in notCachedPosts)
             {
-                habr.DownloadPost(id, true);
+                habr.DownloadPost(id, skipComments: true);
                 loadedCount++;
                 var runTime = DateTime.Now - startTime;
                 var postsPerSecond = (loadedCount)/runTime.TotalSeconds;

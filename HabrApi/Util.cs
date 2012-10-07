@@ -16,6 +16,7 @@ namespace HabrApi
                                                                              {'г', "g"},
                                                                              {'д', "d"},
                                                                              {'е', "e"},
+                                                                             {'ё', "e"},
                                                                              {'ж', "zh"},
                                                                              {'з', "z"},
                                                                              {'и', "i"},
@@ -67,17 +68,14 @@ namespace HabrApi
         public static string Transliterate(this string str)
         {
             // Borrowed here: http://www.koders.com/csharp/fidCA1D278AD6AD1BC6B2609D6B6F3060C08CE4B8E5.aspx?s=ftp
+            // TODO: fix ucase/lcase
             var sb = new StringBuilder();
             for (var i = 0; i < str.Length; i++)
             {
-                var isUcase = (str[i] >= 'А') && (str[i] <= 'Я');
-                var usLcase = (str[i] >= 'а') && (str[i] <= 'я');
-                if (isUcase || usLcase)
+                var lowerCase = str[i].ToString().ToLower()[0];
+                if (Translit.ContainsKey(lowerCase))
                 {
-                    var lowerCase = str[i].ToString().ToLower()[0];
                     var letter = Translit[lowerCase];
-                    if (isUcase && letter.Length >= 1)
-                        letter = letter.Substring(0, 1).ToUpper() + letter.Substring(1);
                     sb.Append(letter);
                 }
                 else
