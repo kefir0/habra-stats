@@ -48,6 +48,19 @@ namespace HabrApiTests
             Uploader.Publish(report, "testComments.html");
         }
 
+        [TestMethod]
+        public void LoadRecentPostsIntoDbTest()
+        {
+            new Habr().LoadRecentPostsIntoDb();
+        }
+
+        [TestMethod]
+        public void TestDownloadPost()
+        {
+            var post = new Habr().DownloadPost(153951);
+            Assert.IsNotNull(post);
+        }
+
         private static IEnumerable<Post> GetTestPosts()
         {
             const int maxPostId = 152123;

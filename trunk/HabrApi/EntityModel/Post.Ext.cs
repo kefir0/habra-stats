@@ -40,7 +40,9 @@ namespace HabrApi.EntityModel
             try
             {
                 var title = TitleRegex.Match(html).Groups[1].Value;
-                var score = int.Parse(ScoreRegex.Match(html).Groups[1].Value);
+                int score;
+                if (!int.TryParse(ScoreRegex.Match(html).Groups[1].Value, out  score))
+                    score = 0;
                 var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" в ", " "), CultureInfo.GetCultureInfo("ru-RU"));
                 var post = new Post
                                {
