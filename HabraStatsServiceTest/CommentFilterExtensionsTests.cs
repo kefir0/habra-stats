@@ -21,7 +21,7 @@ namespace HabrApiTests
             var groups = new[] {new[] {"a", "b", "c"}, new[] {"A", "B", "C"}};
             var combinations = CommentFilterExtensions.GetAllCombinations(groups, (s1, s2) => s1 + s2).ToArray();
             Assert.AreEqual(combinations.Length, 9);
-            Assert.IsTrue(combinations.SequenceEqual(new[]{"aA", "aB", "aC","bA", "bB", "bC","cA", "cB", "cC",}));
+            Assert.IsTrue(combinations.SequenceEqual(new[]{"aA", "aB", "aC","bA", "bB", "bC","cA", "cB", "cC"}));
         }
 
         [TestMethod]
@@ -43,7 +43,7 @@ namespace HabrApiTests
             }
         }
 
-        private IQueryable<Comment> TestQueryable()
+        private static IQueryable<Comment> TestQueryable()
         {
             return new[] {new Comment {Text = "Tst"}, new Comment {Text = "Tst"}}.AsQueryable();
         }

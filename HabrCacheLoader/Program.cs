@@ -10,7 +10,7 @@ namespace HabrCacheLoader
     {
         private static void Main()
         {
-            //DownloadIntoCache();
+            DownloadIntoCache();
             LoadIntoDb();
         }
 
@@ -39,7 +39,7 @@ namespace HabrCacheLoader
             var startTime = DateTime.Now;
             var loadedCount = 0;
             var commentCount = new List<int>();
-            var startPost = GetMaxSqlPostId();
+            var startPost = GetMaxSqlPostId() - 100;
 
             foreach (var p in habr.GetCachedPosts(parallelBatchSize: 256, startPostId: startPost - 1))
             {

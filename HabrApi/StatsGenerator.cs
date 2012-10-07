@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -36,6 +37,11 @@ namespace HabrApi
             var comments = posts.SelectMany(p => p.Comments).OrderByDescending(c => c.Score)
                 .Take(100).ToArray();
 
+            return GenerateCommentStats(comments);
+        }
+
+        public string GenerateCommentStats(Comment[] comments)
+        {
             return MinifyHtml(TransformData(comments, GetCommentsXslt()));
         }
 

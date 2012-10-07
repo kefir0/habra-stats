@@ -1,12 +1,12 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [HabraStats]    Script Date: 06.10.2012 15:09:56 ******/
+/****** Object:  Database [HabraStats]    Script Date: 07.10.2012 22:41:14 ******/
 CREATE DATABASE [HabraStats]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'HabraStats', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats.mdf' , SIZE = 71680KB , MAXSIZE = UNLIMITED, FILEGROWTH = 10240KB )
+( NAME = N'HabraStats', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats.mdf' , SIZE = 2078720KB , MAXSIZE = UNLIMITED, FILEGROWTH = 10240KB )
  LOG ON 
-( NAME = N'HabraStats_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats_log.ldf' , SIZE = 102144KB , MAXSIZE = 102400KB , FILEGROWTH = 10%)
+( NAME = N'HabraStats_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats_log.ldf' , SIZE = 123904KB , MAXSIZE = 307200KB , FILEGROWTH = 10%)
 GO
 ALTER DATABASE [HabraStats] SET COMPATIBILITY_LEVEL = 110
 GO
@@ -75,7 +75,7 @@ ALTER DATABASE [HabraStats] SET TARGET_RECOVERY_TIME = 0 SECONDS
 GO
 USE [HabraStats]
 GO
-/****** Object:  Table [dbo].[Comments]    Script Date: 06.10.2012 15:09:56 ******/
+/****** Object:  Table [dbo].[Comments]    Script Date: 07.10.2012 22:41:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -97,7 +97,7 @@ CREATE TABLE [dbo].[Comments](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
-/****** Object:  Table [dbo].[Posts]    Script Date: 06.10.2012 15:09:56 ******/
+/****** Object:  Table [dbo].[Posts]    Script Date: 07.10.2012 22:41:14 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -114,10 +114,16 @@ CREATE TABLE [dbo].[Posts](
 ) ON [PRIMARY]
 
 GO
-/****** Object:  Index [IX_Score]    Script Date: 06.10.2012 15:09:56 ******/
+/****** Object:  Index [IX_Score]    Script Date: 07.10.2012 22:41:14 ******/
 CREATE NONCLUSTERED INDEX [IX_Score] ON [dbo].[Comments]
 (
 	[Score] DESC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+GO
+/****** Object:  Index [NonClusteredIndex-20121007-212623]    Script Date: 07.10.2012 22:41:14 ******/
+CREATE NONCLUSTERED INDEX [NonClusteredIndex-20121007-212623] ON [dbo].[Comments]
+(
+	[Date] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
 ALTER TABLE [dbo].[Comments]  WITH CHECK ADD  CONSTRAINT [FK_Comments_Post] FOREIGN KEY([PostId])

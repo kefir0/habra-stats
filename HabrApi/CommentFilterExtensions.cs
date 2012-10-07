@@ -9,7 +9,7 @@ namespace HabrApi
 {
     public static class CommentFilterExtensions
     {
-        // TODO: Все комбинации, напр "лучшие за год с картинками", "худшие короткие за всё время" итд (методы с атрибутами и комбинации!)
+        // Все комбинации, напр "лучшие за год с картинками", "худшие короткие за всё время" итд
 
         [CommentReport(Category = "Содержимое", Name = "", CategoryOrder = 2)]
         public static IQueryable<Comment> NoFilter(this IQueryable<Comment> comments)
@@ -58,31 +58,35 @@ namespace HabrApi
         [CommentReport(Category = "Рейтинг", Name = "спорные", CategoryOrder = 1)]
         public static IQueryable<Comment> Controversial(this IQueryable<Comment> comments)
         {
-            return comments.OrderBy(c => c.ScoreMinus*c.ScorePlus/(c.Score == 0 ? 1 : c.Score) + (c.ScorePlus + c.ScoreMinus)*3);
+            return comments.OrderBy(c => (c.ScorePlus - c.Score) * c.ScorePlus / (c.Score == 0 ? 1 : c.Score) + (c.ScorePlus + (c.ScorePlus - c.Score)) * 3);
         }
 
         [CommentReport(Category = "Время", Name = "За сутки", CategoryOrder = 0)]
         public static IQueryable<Comment> Day(this IQueryable<Comment> comments)
         {
-            return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 1);
+            var dateTime = DateTime.Now.AddDays(-1);
+            return comments.Where(c => c.Date > dateTime);
         }
 
         [CommentReport(Category = "Время", Name = "За неделю", CategoryOrder = 0)]
         public static IQueryable<Comment> Week(this IQueryable<Comment> comments)
         {
-            return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 7);
+            var dateTime = DateTime.Now.AddDays(-7);
+            return comments.Where(c => c.Date > dateTime);
         }
 
         [CommentReport(Category = "Время", Name = "За месяц", CategoryOrder = 0)]
         public static IQueryable<Comment> Month(this IQueryable<Comment> comments)
         {
-            return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 31);
+            var dateTime = DateTime.Now.AddDays(-31);
+            return comments.Where(c => c.Date > dateTime);
         }
 
         [CommentReport(Category = "Время", Name = "За год", CategoryOrder = 0)]
         public static IQueryable<Comment> Year(this IQueryable<Comment> comments)
         {
-            return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 365);
+            var dateTime = DateTime.Now.AddDays(-365);
+            return comments.Where(c => c.Date > dateTime);
         }
 
         [CommentReport(Category = "Время", Name = "За всё время", CategoryOrder = 0)]
