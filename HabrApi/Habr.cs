@@ -116,7 +116,7 @@ namespace HabrApi
                                                                    parallelResults.Add(post);
                                                            });
 
-                foreach (var result in parallelResults)
+                foreach (var result in parallelResults.OrderByDescending(r => r.Id))
                 {
                     yield return result;
                 }
@@ -161,7 +161,8 @@ namespace HabrApi
         public int LoadRecentPostsIntoDb()
         {
             var count = 0;
-            foreach (var post in GetRecentPosts().TakeWhile(p => !ShouldCache(p)))
+            var cachedCount = 0;  // Safety threshold
+            foreach (var post in GetRecentPosts().TakeWhile(post => !ShouldCache(post) || cachedCount++ <= 50))
             {
                 using (var db = HabraStatsEntities.CreateInstance())
                 {
