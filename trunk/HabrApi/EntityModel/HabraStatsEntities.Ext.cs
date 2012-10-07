@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-namespace HabrApi.EntityModel
+﻿namespace HabrApi.EntityModel
 {
     public partial class HabraStatsEntities
     {
@@ -17,6 +14,11 @@ namespace HabrApi.EntityModel
         {
             ExecuteStoreCommand("DELETE FROM POSTS WHERE ID=" + post.Id);
             Posts.AddObject(post);
+        }
+
+        partial void OnContextCreated()
+        {
+            CommandTimeout = 60*5;
         }
     }
 }

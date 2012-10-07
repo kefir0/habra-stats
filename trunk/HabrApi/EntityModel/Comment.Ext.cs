@@ -31,6 +31,19 @@ namespace HabrApi.EntityModel
         public int ScoreMinus
         {
             get { return Score - ScorePlus; }
+            set {} // For serialization
+        }
+
+        public string PostUrl
+        {
+            get { return Post.GetUrl(PostId); }
+            set { } // For serialization
+        }
+
+        public string PostTitle
+        {
+            get { return Post.Title; }
+            set { } // For serialization
         }
 
         public static IEnumerable<Comment> Parse(string postHtml, Post post)

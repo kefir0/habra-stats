@@ -158,5 +158,16 @@ namespace HabrApi
             return maxId + 5; // compensate error
         }
 
+        public void LoadRecentPostsIntoDb()
+        {
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                foreach (var post in GetRecentPosts().TakeWhile(p => !ShouldCache(p)))
+                {
+                    db.UpsertPost(post);
+                }
+            }
+        }
+
     }
 }
