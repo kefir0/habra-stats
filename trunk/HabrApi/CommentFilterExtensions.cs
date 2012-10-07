@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using HabrApi.EntityModel;
 
 namespace HabrApi
@@ -84,21 +85,45 @@ namespace HabrApi
             return comments;
         }
 
-        public static IEnumerable<KeyValuePair<string, IQueryable<Comment>>> GetAllCommentReports()
+        public static IEnumerable<KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>>> GetAllCommentReports()
         {
-            var groups = GetCommentReportMethods().GroupBy(m => m.Key.Category);
-            var combinations = GetAllCombinations(groups, Func<>);
-            return null;
+            // T = IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>>
+            var groups = GetCommentReportMethods().GroupBy(m => m.Key.Category)
+                .Select(g => g.Select(p => p.ToEnumerable()));
+            var methodGroups = GetAllCombinations(groups, (g1, g2) => g1.Concat(g2));
+            return methodGroups.Select(CombineMethods);
         }
 
-        public static KeyValuePair<string, IQueryable<Comment>> CombineReports(KeyValuePair<string, IQueryable<Comment>> x, KeyValuePair<string, IQueryable<Comment>> y)
+        public static IEnumerable<T> ToEnumerable<T>(this T obj)
         {
-            return new KeyValuePair<string, IQueryable<Comment>>(string.Format("{0} - {1}", x, y));
+            yield return obj;
         }
 
-        public static IEnumerable<T>  GetAllCombinations<T, TCombination>(IEnumerable<IEnumerable<T>> groups, Func<T, T, TCombination> combine)
+        public static KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>> CombineMethods(IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>> methodGroup)
         {
-            // Take first element, combine
+            var sb = new StringBuilder();
+            Func<IQueryable<Comment>, IQueryable<Comment>> resultFunc = null;
+            foreach (var pair in methodGroup)
+            {
+                sb.Append(pair.Key.Name).Append(' ');
+                var func = (Func<IQueryable<Comment>, IQueryable<Comment>>) Delegate.CreateDelegate(typeof (Func<IQueryable<Comment>, IQueryable<Comment>>), pair.Value);
+                if (resultFunc == null)
+                {
+                    resultFunc = func;
+                }
+                else
+                {
+                    var f1 = resultFunc; // Do not access modified closure
+                    resultFunc = x => f1(func(x));
+                }
+            }
+
+            return new KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>>(sb.ToString().Trim(), resultFunc);
+        }
+
+        public static IEnumerable<T> GetAllCombinations<T>(IEnumerable<IEnumerable<T>> groups, Func<T, T, T> combine)
+        {
+            return groups.Aggregate((g1, g2) => g1.SelectMany(g => g2.Select(gg2 => combine(g, gg2))));
         }
 
         public static IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>> GetCommentReportMethods()
