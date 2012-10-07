@@ -18,23 +18,5 @@ namespace HabrApi.EntityModel
             ExecuteStoreCommand("DELETE FROM POSTS WHERE ID=" + post.Id);
             Posts.AddObject(post);
         }
-
-        public IEnumerable<Comment> GetTopPictureComments()
-        {
-            return Comments.OrderByDescending(c => c.Score)
-                .Where(c => c.Text.Contains(".jpg") || c.Text.Contains(".png") || c.Text.Contains(".gif"));
-        }
-
-        // TODO: Все комбинации, напр "лучшие за год с картинками", "худшие короткие за всё время" итд (методы с атрибутами и комбинации!)
-
-        public IEnumerable<Comment> GetTopShortComments()
-        {
-            yield break;
-        }
-        
-        public IEnumerable<Comment> GetTopLongComments()
-        {
-            yield break;
-        }
     }
 }
