@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Data.Objects;
+using System.IO;
 using System.Linq;
 using System.ServiceProcess;
 using System.Threading;
 using System.Timers;
 using HabrApi;
 using System.Diagnostics;
+using HabrApi.EntityModel;
 using Timer = System.Timers.Timer;
 
 namespace HabraStatsService
@@ -38,8 +41,10 @@ namespace HabraStatsService
             _timer.Stop();
         }
 
-        private static void Log(string message, int eventId = 0)
+        private static void Log(string message, int eventId = 0, string description = null)
         {
+            if (description != null)
+                message = message + Environment.NewLine + Environment.NewLine + description;
             EventLog.WriteEntry(EventLogSourceName, message, EventLogEntryType.Information, eventId);
         }
 
@@ -78,6 +83,38 @@ namespace HabraStatsService
             catch(Exception e)
             {
                 Log("Failed to generate habr stats :( " + e);
+            }
+        }
+
+        private static void GenerateAndUploadStatsSql()
+        {
+            try
+            {
+                var habr = new Habr();
+                Log("Loading posts into DB");
+                habr.LoadRecentPostsIntoDb();
+
+                var generator = new StatsGenerator();
+                using (var db = HabraStatsEntities.CreateInstance())
+                {
+                    foreach (var report in CommentFilterExtensions.GetAllCommentReports())
+                    {
+                        var fileName = string.Format("{0}.html", report.Key);
+                        var query = report.Value(db.Comments).Take(100);
+                        var queryText = ((ObjectQuery)query).ToTraceString(); 
+                        Log("Generating stats: " + report.Key, description:queryText);
+                        var comments = query.ToArray();
+                        Log("Publishing stats: " + report.Key);
+                        Uploader.Publish(generator.GenerateCommentStats(comments), fileName);
+                        Log("Stats uploaded: " + report.Key, 2);
+                    }
+                }
+
+                Log("UPDATE PASS COMPLETE", 3);
+            }
+            catch (Exception e)
+            {
+                Log("Failed to generate habr stats :( \n" + e, 13);
             }
         }
     }

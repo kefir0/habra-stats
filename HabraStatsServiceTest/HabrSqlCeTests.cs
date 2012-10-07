@@ -1,4 +1,5 @@
-﻿using System.Data.Objects;
+﻿using System;
+using System.Data.Objects;
 using System.IO;
 using System.Linq;
 using HabrApi;
@@ -40,6 +41,14 @@ namespace HabrApiTests
                     File.WriteAllText(fileName, generator.GenerateCommentStats(comments));
                 }
             }
+        }
+
+        [TestMethod]
+        public void GenerateIndexTest()
+        {
+            var links = CommentFilterExtensions.GetAllCommentReports()
+                .Select(r => string.Format(@"<br/><a href=""{0}.html"">{0}</a>", r.Key));
+            File.WriteAllText(@"e:\habraIndex.html", links.Aggregate((s1, s2) => s1 + Environment.NewLine + s2));
         }
     }
 }

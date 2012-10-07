@@ -11,7 +11,8 @@
   <xsl:template match="/">
     <html>
       <head>
-        <title>Habrahabr top comments</title>
+          <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+          <title>Habrahabr top comments</title>
         <style type="text/css">
           .score
           {
