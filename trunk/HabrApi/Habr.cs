@@ -160,11 +160,12 @@ namespace HabrApi
 
         public void LoadRecentPostsIntoDb()
         {
-            using (var db = HabraStatsEntities.CreateInstance())
+            foreach (var post in GetRecentPosts().TakeWhile(p => !ShouldCache(p)))
             {
-                foreach (var post in GetRecentPosts().TakeWhile(p => !ShouldCache(p)))
+                using (var db = HabraStatsEntities.CreateInstance())
                 {
                     db.UpsertPost(post);
+                    db.SaveChanges();
                 }
             }
         }
