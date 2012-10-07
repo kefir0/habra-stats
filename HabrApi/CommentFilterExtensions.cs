@@ -11,84 +11,96 @@ namespace HabrApi
     {
         // TODO: Все комбинации, напр "лучшие за год с картинками", "худшие короткие за всё время" итд (методы с атрибутами и комбинации!)
 
-        [CommentReport(Category = "Содержимое", Name = "С картинкой")]
+        [CommentReport(Category = "Содержимое", Name = "", CategoryOrder = 2)]
+        public static IQueryable<Comment> NoFilter(this IQueryable<Comment> comments)
+        {
+            return comments;
+        }
+
+        [CommentReport(Category = "Содержимое", Name = "с картинкой", CategoryOrder = 2)]
         public static IQueryable<Comment> WithPicture(this IQueryable<Comment> comments)
         {
             return comments.OrderByDescending(c => c.Score)
                 .Where(c => c.Text.Contains(".jpg") || c.Text.Contains(".png") || c.Text.Contains(".gif"));
         }
 
-        [CommentReport(Category = "Содержимое", Name = "Со ссылкой")]
+        [CommentReport(Category = "Содержимое", Name = "со ссылкой", CategoryOrder = 2)]
         public static IQueryable<Comment> WithLink(this IQueryable<Comment> comments)
         {
             return comments.OrderByDescending(c => c.Score)
                 .Where(c => c.Text.Contains("http://"));
         }
 
-        [CommentReport(Category = "Размер", Name = "Короткие")]
+        [CommentReport(Category = "Содержимое", Name = "короткие", CategoryOrder = 2)]
         public static IQueryable<Comment> Short(this IQueryable<Comment> comments)
         {
             return comments.Where(c => c.Text.Length < 13);
         }
 
-        [CommentReport(Category = "Размер", Name = "Длинные")]
+        [CommentReport(Category = "Содержимое", Name = "длинные", CategoryOrder = 2)]
         public static IQueryable<Comment> Long(this IQueryable<Comment> comments)
         {
             return comments.Where(c => c.Text.Length > 1000);
         }
 
-        [CommentReport(Category = "Рейтинг", Name = "Лучшие")]
+        [CommentReport(Category = "Рейтинг", Name = "лучшие", CategoryOrder = 1)]
         public static IQueryable<Comment> Best(this IQueryable<Comment> comments)
         {
             return comments.OrderByDescending(c => c.Score);
         }
 
-        [CommentReport(Category = "Рейтинг", Name = "Худшие")]
+        [CommentReport(Category = "Рейтинг", Name = "худшие", CategoryOrder = 1)]
         public static IQueryable<Comment> Worst(this IQueryable<Comment> comments)
         {
             return comments.OrderBy(c => c.Score);
         }
 
-        [CommentReport(Category = "Рейтинг", Name = "Спорные")]
+        [CommentReport(Category = "Рейтинг", Name = "спорные", CategoryOrder = 1)]
         public static IQueryable<Comment> Controversial(this IQueryable<Comment> comments)
         {
             return comments.OrderBy(c => c.ScoreMinus*c.ScorePlus/(c.Score == 0 ? 1 : c.Score) + (c.ScorePlus + c.ScoreMinus)*3);
         }
 
-        [CommentReport(Category = "Время", Name = "за сутки")]
+        [CommentReport(Category = "Время", Name = "За сутки", CategoryOrder = 0)]
         public static IQueryable<Comment> Day(this IQueryable<Comment> comments)
         {
             return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 1);
         }
 
-        [CommentReport(Category = "Время", Name = "за неделю")]
+        [CommentReport(Category = "Время", Name = "За неделю", CategoryOrder = 0)]
         public static IQueryable<Comment> Week(this IQueryable<Comment> comments)
         {
             return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 7);
         }
 
-        [CommentReport(Category = "Время", Name = "за месяц")]
+        [CommentReport(Category = "Время", Name = "За месяц", CategoryOrder = 0)]
         public static IQueryable<Comment> Month(this IQueryable<Comment> comments)
         {
             return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 31);
         }
 
-        [CommentReport(Category = "Время", Name = "за год")]
+        [CommentReport(Category = "Время", Name = "За год", CategoryOrder = 0)]
         public static IQueryable<Comment> Year(this IQueryable<Comment> comments)
         {
             return comments.Where(c => (DateTime.Now - c.Date).TotalDays < 365);
         }
 
-        [CommentReport(Category = "Время", Name = "за всё время")]
+        [CommentReport(Category = "Время", Name = "За всё время", CategoryOrder = 0)]
         public static IQueryable<Comment> AllTime(this IQueryable<Comment> comments)
         {
             return comments;
         }
 
+        /// <summary>
+        /// Generates list of all possible reports, in form of 'report name':'func to retrieve'.
+        /// Does this by doing all possible combinations of report methods.
+        /// </summary>
         public static IEnumerable<KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>>> GetAllCommentReports()
         {
             // T = IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>>
-            var groups = GetCommentReportMethods().GroupBy(m => m.Key.Category)
+            var groups = GetCommentReportMethods()
+                .OrderBy(m => m.Key.CategoryOrder)
+                .GroupBy(m => m.Key.Category)
                 .Select(g => g.Select(p => p.ToEnumerable()));
             var methodGroups = GetAllCombinations(groups, (g1, g2) => g1.Concat(g2));
             return methodGroups.Select(CombineMethods);
