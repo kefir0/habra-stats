@@ -65,6 +65,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="EntityModel\HabraStatsDb.sql" />
+    <Compile Include="CommentFilterExtensions.cs" />
+    <Compile Include="CommentReportAttribute.cs" />
     <Compile Include="EntityModel\Comment.Ext.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -52,6 +52,7 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
+    <Compile Include="CommentFilterExtensionsTests.cs" />
     <Compile Include="HabrSqlCeTests.cs" />
     <Compile Include="HabrTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
