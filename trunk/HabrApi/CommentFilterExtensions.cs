@@ -24,13 +24,6 @@ namespace HabrApi
                 .Where(c => c.Text.Contains(".jpg") || c.Text.Contains(".png") || c.Text.Contains(".gif"));
         }
 
-        [CommentReport(Category = "Содержимое", Name = "со ссылкой", CategoryOrder = 2)]
-        public static IQueryable<Comment> WithLink(this IQueryable<Comment> comments)
-        {
-            return comments.OrderByDescending(c => c.Score)
-                .Where(c => c.Text.Contains("http://"));
-        }
-
         [CommentReport(Category = "Содержимое", Name = "короткие", CategoryOrder = 2)]
         public static IQueryable<Comment> Short(this IQueryable<Comment> comments)
         {
@@ -46,20 +39,20 @@ namespace HabrApi
         [CommentReport(Category = "Рейтинг", Name = "лучшие", CategoryOrder = 1)]
         public static IQueryable<Comment> Best(this IQueryable<Comment> comments)
         {
-            return comments.OrderByDescending(c => c.Score);
+            return comments.Where(c => c.Score > 10).OrderByDescending(c => c.Score);
         }
 
         [CommentReport(Category = "Рейтинг", Name = "худшие", CategoryOrder = 1)]
         public static IQueryable<Comment> Worst(this IQueryable<Comment> comments)
         {
-            return comments.OrderBy(c => c.Score);
+            return comments.Where(c => c.Score < 10).OrderBy(c => c.Score);
         }
 
-        [CommentReport(Category = "Рейтинг", Name = "спорные", CategoryOrder = 1)]
-        public static IQueryable<Comment> Controversial(this IQueryable<Comment> comments)
-        {
-            return comments.OrderBy(c => (c.ScorePlus - c.Score) * c.ScorePlus / (c.Score == 0 ? 1 : c.Score) + (c.ScorePlus + (c.ScorePlus - c.Score)) * 3);
-        }
+        //[CommentReport(Category = "Рейтинг", Name = "спорные", CategoryOrder = 1)]
+        //public static IQueryable<Comment> Controversial(this IQueryable<Comment> comments)
+        //{
+        //    return comments.OrderBy(c => (c.ScorePlus - c.Score) * c.ScorePlus / (c.Score == 0 ? 1 : c.Score) + (c.ScorePlus + (c.ScorePlus - c.Score)) * 3);
+        //}
 
         [CommentReport(Category = "Время", Name = "За сутки", CategoryOrder = 0)]
         public static IQueryable<Comment> Day(this IQueryable<Comment> comments)
