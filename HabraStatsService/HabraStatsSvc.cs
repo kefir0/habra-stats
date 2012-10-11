@@ -25,7 +25,7 @@ namespace HabraStatsService
 
         private static void OnTimerTick(object state, ElapsedEventArgs elapsedEventArgs)
         {
-            GenerateAndUploadStatsOld();
+            GenerateAndUploadStatsSql();
         }
 
         protected override void OnStart(string[] args)
