@@ -43,7 +43,8 @@ namespace HabrApi.EntityModel
                 int score;
                 if (!int.TryParse(ScoreRegex.Match(html).Groups[1].Value, out  score))
                     score = 0;
-                var date = DateTime.Parse(DateRegex.Match(html).Groups[1].Value.Replace(" в ", " "), CultureInfo.GetCultureInfo("ru-RU"));
+                var dateTimeString = DateRegex.Match(html).Groups[1].Value;
+                var date = Util.ParseRusDateTime(dateTimeString);
                 var post = new Post
                                {
                                    Id = id,
@@ -54,7 +55,6 @@ namespace HabrApi.EntityModel
 
                 if (!skipComments)
                 {
-                    //post.Comments = Comment.Parse(html, post).ToArray();
                     foreach (var comment in Comment.Parse(html, post)
                         .Where(comment => includeZeroVoteComments || comment.Score > 0 || comment.ScorePlus > 0))
                     {

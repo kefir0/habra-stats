@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Runtime.Serialization;
 using System.Text;
@@ -9,41 +11,41 @@ namespace HabrApi
     public static class Util
     {
         private static readonly Dictionary<char, string> Translit = new Dictionary<char, string>
-                                                                         {
-                                                                             {'а', "a"},
-                                                                             {'б', "b"},
-                                                                             {'в', "v"},
-                                                                             {'г', "g"},
-                                                                             {'д', "d"},
-                                                                             {'е', "e"},
-                                                                             {'ё', "e"},
-                                                                             {'ж', "zh"},
-                                                                             {'з', "z"},
-                                                                             {'и', "i"},
-                                                                             {'й', "y"},
-                                                                             {'к', "k"},
-                                                                             {'л', "l"},
-                                                                             {'м', "m"},
-                                                                             {'н', "n"},
-                                                                             {'о', "o"},
-                                                                             {'п', "p"},
-                                                                             {'р', "r"},
-                                                                             {'с', "s"},
-                                                                             {'т', "t"},
-                                                                             {'у', "u"},
-                                                                             {'ф', "f"},
-                                                                             {'х', "h"},
-                                                                             {'ц', "c"},
-                                                                             {'ч', "ch"},
-                                                                             {'ш', "sh"},
-                                                                             {'щ', "shh"},
-                                                                             {'ъ', ""},
-                                                                             {'ы', "i"},
-                                                                             {'ь', ""},
-                                                                             {'э', "e"},
-                                                                             {'ю', "u"},
-                                                                             {'я', "ya"}
-                                                                         };
+                                                                        {
+                                                                            {'а', "a"},
+                                                                            {'б', "b"},
+                                                                            {'в', "v"},
+                                                                            {'г', "g"},
+                                                                            {'д', "d"},
+                                                                            {'е', "e"},
+                                                                            {'ё', "e"},
+                                                                            {'ж', "zh"},
+                                                                            {'з', "z"},
+                                                                            {'и', "i"},
+                                                                            {'й', "y"},
+                                                                            {'к', "k"},
+                                                                            {'л', "l"},
+                                                                            {'м', "m"},
+                                                                            {'н', "n"},
+                                                                            {'о', "o"},
+                                                                            {'п', "p"},
+                                                                            {'р', "r"},
+                                                                            {'с', "s"},
+                                                                            {'т', "t"},
+                                                                            {'у', "u"},
+                                                                            {'ф', "f"},
+                                                                            {'х', "h"},
+                                                                            {'ц', "c"},
+                                                                            {'ч', "ch"},
+                                                                            {'ш', "sh"},
+                                                                            {'щ', "shh"},
+                                                                            {'ъ', ""},
+                                                                            {'ы', "i"},
+                                                                            {'ь', ""},
+                                                                            {'э', "e"},
+                                                                            {'ю', "u"},
+                                                                            {'я', "ya"}
+                                                                        };
 
         public static string ToXml(this object obj)
         {
@@ -90,5 +92,10 @@ namespace HabrApi
         {
             return s.Transliterate().Replace(" ", "_");
         }
-    }
+
+        public static DateTime ParseRusDateTime(string dateTimeString)
+        {
+            return DateTime.Parse(dateTimeString.Replace(" в ", " "), CultureInfo.GetCultureInfo("ru-RU"));
+        }
+}
 }

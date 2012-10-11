@@ -23,10 +23,10 @@ namespace HabrApi.EntityModel
             ".*?" +
             "<a .*? class=\"username\">(?<user>.*?)</a>" +
             ".*?" +
-            "<time datetime=\"(?<date>.*?)\">" +
+            "<time.*?>(?<date>.*?)</time>" +
             ".*?" +
             "<div class=\"message.*?\">(?<text>.*?)</div>",
-            RegexOptions.Singleline | RegexOptions.Compiled);
+            RegexOptions.Singleline | RegexOptions.Compiled, TimeSpan.FromMilliseconds(200));
 
         public int ScoreMinus
         {
@@ -66,7 +66,7 @@ namespace HabrApi.EntityModel
                                   PostId = post.Id,
                                   UserName = c.Groups["user"].Value,
                                   Avatar = c.Groups["avatar"].Value,
-                                  Date = DateTime.Parse(c.Groups["date"].Value)
+                                  Date = Util.ParseRusDateTime(c.Groups["date"].Value)
                               };
             return comment;
         }

@@ -51,11 +51,11 @@ namespace HabrApi
             }
         }
 
-        public Post DownloadPost(int postId, bool skipComments = false)
+        public Post DownloadPost(int postId, bool skipComments = false, bool ignoreCache = false)
         {
             var url = Post.GetUrl(postId);
             var fileName = GetCachePath(url);
-            if (File.Exists(fileName))
+            if (!ignoreCache && File.Exists(fileName))
             {
                 // File exists: check if it is valid, parse to retrive post date
                 // And determine whether this post can be loaded from cache
@@ -101,51 +101,32 @@ namespace HabrApi
         /// <summary>
         /// Enumerates all posts from newest to oldest.
         /// </summary>
-        public IEnumerable<Post> GetRecentPosts()
+        public IEnumerable<Post> GetRecentPosts(bool ignoreCache = false)
         {
             var lastPostId = GetLastPostId();
 
-            for (var i = lastPostId; i >= 0; i-=ParallelBatchSize)
+            for (var i = lastPostId; i >= 0; i--)
             {
-                var parallelResults = new ConcurrentBag<Post>();
-                Parallel.For(i - ParallelBatchSize, i, j =>
-                                                           {
-                                                               Debug.WriteLine(j);
-                                                               var post = DownloadPost(j);
-                                                               if (post != null)
-                                                                   parallelResults.Add(post);
-                                                           });
-
-                foreach (var result in parallelResults.OrderByDescending(r => r.Id))
-                {
-                    yield return result;
-                }
+                var post = DownloadPost(i, ignoreCache: ignoreCache);
+                if (post != null)
+                    yield return post;
             }
         }
 
         /// <summary>
         /// Enumerates all valid posts in cache.
         /// </summary>
-        public IEnumerable<Post> GetCachedPosts(int startPostId = 0, int? maxPostId = null, int? parallelBatchSize = null)
+        public IEnumerable<Post> GetCachedPosts(int startPostId = 0, int? maxPostId = null)
         {
             var lastPostId = maxPostId ?? GetLastPostId();
-            var batchSize = parallelBatchSize ?? ParallelBatchSize;
 
-            for (var i = startPostId; i <= lastPostId; i += batchSize)
+            for (var i = startPostId; i <= lastPostId; i++)
             {
-                var parallelResults = new ConcurrentBag<Post>();
-                Parallel.For(i, i + batchSize, j =>
-                {
-                    if (!IsInCache(j)) return;
-                    var post = Post.Parse(File.ReadAllText(GetCachePath(Post.GetUrl(j))), j);
-                    if (post != null)
-                        parallelResults.Add(post);
-                });
-
-                foreach (var result in parallelResults)
-                {
-                    yield return result;
-                }
+                if (!IsInCache(i)) continue;
+                var cachePath = GetCachePath(Post.GetUrl(i));
+                var post = Post.Parse(File.ReadAllText(cachePath), i);
+                if (post != null)
+                    yield return post;
             }
         }
 
@@ -161,8 +142,8 @@ namespace HabrApi
         public int LoadRecentPostsIntoDb()
         {
             var count = 0;
-            var cachedCount = 0;  // Safety threshold
-            foreach (var post in GetRecentPosts().TakeWhile(post => !ShouldCache(post) || cachedCount++ <= 50))
+            // TODO: Look like there is a bug with nonexistent posts getting into the disk cache.....!
+            foreach (var post in GetRecentPosts(ignoreCache: true).TakeWhile(post => !ShouldCache(post)))
             {
                 using (var db = HabraStatsEntities.CreateInstance())
                 {
