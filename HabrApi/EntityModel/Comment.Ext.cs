@@ -23,7 +23,7 @@ namespace HabrApi.EntityModel
             ".*?" +
             "<a .*? class=\"username\">(?<user>.*?)</a>" +
             ".*?" +
-            "<time.*?>(?<date>.*?)</time>" +
+            "<time.*?>(?<date>.*?)<" +
             ".*?" +
             "<div class=\"message.*?\">(?<text>.*?)</div>",
             RegexOptions.Singleline | RegexOptions.Compiled, TimeSpan.FromMilliseconds(200));

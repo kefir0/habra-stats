@@ -16,6 +16,7 @@ namespace HabraStatsService
         public const string EventLogSourceName = "HabraStatsSvc";
         private const int HourPeriod = 3; // timer period in hours
         private readonly Timer _timer = new Timer(HourPeriod*60*60*1000);
+        private bool _isInProgress;
 
         public HabraStatsSvc()
         {
@@ -23,7 +24,7 @@ namespace HabraStatsService
             _timer.Elapsed += OnTimerTick;
         }
 
-        private static void OnTimerTick(object state, ElapsedEventArgs elapsedEventArgs)
+        private void OnTimerTick(object state, ElapsedEventArgs elapsedEventArgs)
         {
             GenerateAndUploadStatsSql();
         }
@@ -85,8 +86,12 @@ namespace HabraStatsService
             }
         }
 
-        private static void GenerateAndUploadStatsSql()
+        private void GenerateAndUploadStatsSql()
         {
+            if (_isInProgress)
+                return; // Prevent multiple generators
+            _isInProgress = true;
+
             try
             {
                 var habr = new Habr();
@@ -100,13 +105,11 @@ namespace HabraStatsService
                     foreach (var report in CommentFilterExtensions.GetAllCommentReports())
                     {
                         var fileName = string.Format("{0}.html", report.Key.ToWebPageName());
-                        var query = report.Value(db.Comments).Take(100);
+                        var query = report.Value(db.Comments).Take(50);
                         var queryText = ((ObjectQuery) query).ToTraceString();
                         Log("Generating stats: " + report.Key, description: queryText);
                         var comments = query.ToArray();
-                        Log("Publishing stats: " + report.Key);
                         Uploader.Publish(generator.GenerateCommentStats(comments), fileName);
-                        Log("Stats uploaded: " + report.Key, 2);
                     }
                 }
 
@@ -115,6 +118,10 @@ namespace HabraStatsService
             catch (Exception e)
             {
                 Log("Failed to generate habr stats :( \n" + e, 13);
+            }
+            finally
+            {
+                _isInProgress = false;
             }
         }
     }

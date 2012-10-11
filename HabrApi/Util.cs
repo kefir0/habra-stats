@@ -97,5 +97,5 @@ namespace HabrApi
         {
             return DateTime.Parse(dateTimeString.Replace(" в ", " "), CultureInfo.GetCultureInfo("ru-RU"));
         }
-}
+    }
 }
