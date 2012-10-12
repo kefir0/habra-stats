@@ -45,7 +45,7 @@ namespace HabrApi
         [CommentReport(Category = "Рейтинг", Name = "худшие", CategoryOrder = 1)]
         public static IQueryable<Comment> Worst(this IQueryable<Comment> comments)
         {
-            return comments.Where(c => c.Score < 10).OrderBy(c => c.Score);
+            return comments.Where(c => c.Score < -10).OrderBy(c => c.Score);
         }
 
         //[CommentReport(Category = "Рейтинг", Name = "спорные", CategoryOrder = 1)]

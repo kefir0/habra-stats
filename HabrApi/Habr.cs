@@ -1,14 +1,11 @@
 using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using HabrApi.EntityModel;
 
 namespace HabrApi
@@ -17,8 +14,7 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 4;
-        private const int ParallelBatchSize = 8;
+        private const int CachePostsOlderThanDays = 3;
 
         public string DownloadString(string url)
         {
