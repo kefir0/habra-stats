@@ -62,6 +62,7 @@ namespace HabraStatsService
                 Log("Posts loaded into DB: " + count);
 
                 var generator = new StatsGenerator();
+                bool first = true;
                 using (var db = HabraStatsEntities.CreateInstance())
                 {
                     foreach (var report in CommentFilterExtensions.GetAllCommentReports())
@@ -71,7 +72,14 @@ namespace HabraStatsService
                         var queryText = ((ObjectQuery) query).ToTraceString();
                         Log("Generating stats: " + report.Key, description: queryText);
                         var comments = query.ToArray();
-                        Uploader.Publish(generator.GenerateHtmlReport(comments), fileName);
+                        var htmlReport = generator.GenerateHtmlReport(comments, report.Key);
+                        Uploader.Publish(htmlReport, fileName);
+
+                        if (first)
+                        {
+                            first = false;
+                            Uploader.Publish(htmlReport, "index.html");
+                        }
                     }
                 }
 
