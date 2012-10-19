@@ -12,7 +12,7 @@ namespace HabrApiTests
         public void TestGetCommentReportMethods()
         {
             var methods = CommentFilterExtensions.GetCommentReportMethods().ToArray();
-            Assert.AreEqual(methods.Length,  13);
+            Assert.AreEqual(methods.Length,  12);
         }
 
         [TestMethod]

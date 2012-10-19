@@ -39,7 +39,7 @@ namespace HabrApi.EntityModel
 
             try
             {
-                var title = TitleRegex.Match(html).Groups[1].Value;
+                var title = TitleRegex.Match(html).Groups[1].Value.Replace(" / Хабрахабр", "");
                 int score;
                 if (!int.TryParse(ScoreRegex.Match(html).Groups[1].Value, out  score))
                     score = 0;

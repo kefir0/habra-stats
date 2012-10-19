@@ -49,6 +49,7 @@ namespace HabrApiTests
         }
 
         [TestMethod]
+        [Ignore]
         public void LoadRecentPostsIntoDbTest()
         {
             new Habr().LoadRecentPostsIntoDb();

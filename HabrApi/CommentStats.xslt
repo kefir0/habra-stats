@@ -11,53 +11,74 @@
   <xsl:template match="/">
     <html>
       <head>
-          <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-          <title>Habrahabr top comments</title>
-        <style type="text/css">
-          .score
-          {
-            text-align: right;
-            color: green;
-            display:inline;
-            float:right;
-          }
-        </style>
+        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+        <title>Habrahabr top comments</title>
+        <link href="comments.css" rel="stylesheet" media="all" />
       </head>
 
       <body>
-        <xsl:for-each select="//Comment">
-          <div>
-            <!-- http://habrahabr.ru/i/avatars/stub-user-small.gif -->
-            <!-- Avatar, username, date, link, postlink,           rating -->
-            <img>
-              <xsl:attribute name="src">
-                <xsl:value-of select="Avatar"/>
-              </xsl:attribute>
-            </img>
-            &#160;
-            <xsl:value-of select="UserName" />
-            &#160;&#160;
-            <a>
-              <xsl:attribute name="href">
-                <xsl:value-of select="Url"/>
-              </xsl:attribute>
-              #
-            </a>
-            &#160;&#160;
-            <a>
-              <xsl:attribute name="href">
-                <xsl:value-of select="PostUrl"/>
-              </xsl:attribute>
-              <xsl:value-of select="PostTitle"/>
-            </a>
-            <div class="score">
-              <xsl:value-of select="Score" />
+        <div class="comments_list" style="width:80%; margin-left:auto; margin-right:auto;">
+          <xsl:for-each select="//Comment">
+          
+            <div class="comment_item">
+              <div class="info  ">
+                <div class="voting   ">
+                  <div class="mark positive">
+                    <span class="score">
+                      <xsl:value-of select="Score"/>
+                    </span>
+                  </div>
+                  <!--<div class="mark  negative">
+                    <span class="score" title="Всего 4: &uarr;1 и &darr;3">–2</span>
+                  </div>-->
+                </div>
+
+                <a class="avatar">
+                  <xsl:attribute name="href">
+                    http://habrahabr.ru/<xsl:value-of select="UserName"/>/
+                  </xsl:attribute>
+                  <img>
+                    <xsl:attribute name="src">
+                      <xsl:value-of select="Avatar"/>
+                    </xsl:attribute>
+                  </img>
+                </a>
+                
+                <a class="username">
+                  <xsl:attribute name="href">
+                    http://habrahabr.ru/<xsl:value-of select="UserName"/>/
+                  </xsl:attribute>
+                  <xsl:value-of select="UserName"/>
+                </a>
+
+                <span class="comma">,</span>
+                <time>
+                  <xsl:value-of select="Date"/>
+                </time>
+
+                <a class="link_to_comment">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="Url"/>
+                  </xsl:attribute>
+                  #
+                </a>
+
+                <a class="link_to_comment">
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="PostUrl"/>
+                  </xsl:attribute>
+                  <xsl:value-of select="PostTitle"/>
+                </a>
+              </div>
+              <br />
+              <div class="message html_format">
+                <xsl:value-of select="Text" disable-output-escaping="yes" />
+              </div>
             </div>
-            <br />
-            <xsl:value-of select="Text" disable-output-escaping="yes" />
-          </div>
-          <p/>
-        </xsl:for-each>
+
+            <p/>
+          </xsl:for-each>
+        </div>
         <p/>
 
         <div style="color:gray">

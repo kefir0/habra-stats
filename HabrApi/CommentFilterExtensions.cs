@@ -61,6 +61,13 @@ namespace HabrApi
             return comments.Where(c => c.Date > dateTime);
         }
 
+        [CommentReport(Category = "Время", Name = "За двое суток", CategoryOrder = 0)]
+        public static IQueryable<Comment> TwoDays(this IQueryable<Comment> comments)
+        {
+            var dateTime = DateTime.Now.AddDays(-2);
+            return comments.Where(c => c.Date > dateTime);
+        }
+
         [CommentReport(Category = "Время", Name = "За неделю", CategoryOrder = 0)]
         public static IQueryable<Comment> Week(this IQueryable<Comment> comments)
         {
