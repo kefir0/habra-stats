@@ -32,7 +32,7 @@ namespace HabrApi.EntityModel
 
         public int ScoreMinus
         {
-            get { return Score - ScorePlus; }
+            get { return ScorePlus - Score; }
             set {} // For serialization
         }
 

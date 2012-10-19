@@ -52,7 +52,6 @@ namespace HabrApiTests
                 .Select(r => string.Format(@"<br/><a href=""{0}.html"">{1}</a>", r.Key.ToWebPageName(), r.Key));
             File.WriteAllText(@"e:\habraIndex.html", links.Aggregate((s1, s2) => s1 + Environment.NewLine + s2));
         }
-
                 
         [TestMethod]
         public void GenerateTestReport()
