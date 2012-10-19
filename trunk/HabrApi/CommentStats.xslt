@@ -19,18 +19,6 @@
         <script type="text/javascript" src="jquery-1.8.2.min.js">;</script>
       </head>
       <body>
-        <script>
-          $(document).ready(function(){
-          $("input").click(function(event){
-          var res = $("input:checked").map(function() {
-          return this.id;
-          }).get().join('_') + ".html";
-          //alert(res);
-          $("#navLink").attr('href', res);
-          $("#navLink").html(res);
-          });
-          });
-        </script>
 
         <!-- Header with selection -->
         <div style="width:80%; margin-left:auto; margin-right:auto;display:block;">
@@ -65,13 +53,42 @@
               </div>
             </xsl:for-each>
 
-            <img src="habrahabr_01.png" style="display:inline; float:right; width:100px; height:75px" />
+            <!--<img src="habrahabr_01.png" style="display:inline; float:right; width:100px; height:75px" />-->
+            <h2 style="display:inline; float:right; margin-top:37px; color: gray;" >Топ комментариев Хабра</h2>
           </div>
           <a id="navLink" />
         </div>
 
+        <script>
+          <xsl:text disable-output-escaping="yes">
+            function initState()
+            {
+              $("input").map(function(){
+                if (document.URL.indexOf(this.value) > 0)
+                {
+                  this.checked=true;
+                  var selector = "label[for='"+this.id+"']";
+                  $(selector).css("font-weight", "bold");
+                }
+              });
+
+              $("input").click(function(event){
+                var res = $("input:checked").map(function() {
+                  return this.id;
+                }).get().join('_') + ".html";
+                window.location.href = res;
+                //$("#navLink").attr('href', res);
+                //$("#navLink").html(res);
+              });
+
+            }
+
+            initState();
+          </xsl:text>
+        </script>
+
         <div style="clear:both;" />
-        <hr  />
+        <hr style="width:83%" />
 
         <!-- Comments -->
         <div class="comments_list" style="width:80%; margin-left:auto; margin-right:auto;">
