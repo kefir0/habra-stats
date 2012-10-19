@@ -14,7 +14,7 @@ namespace HabrApi
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
         private const string CachePath = @"e:\HabrCache";
-        private const int CachePostsOlderThanDays = 3;
+        private const double CachePostsOlderThanDays = 2.7;
 
         public string DownloadString(string url)
         {
@@ -138,7 +138,7 @@ namespace HabrApi
         public int LoadRecentPostsIntoDb()
         {
             var count = 0;
-            foreach (var post in GetRecentPosts(ignoreCache: true).TakeWhile(post => !ShouldCache(post)))
+            foreach (var post in GetRecentPosts(ignoreCache: true).TakeWhile(post => post.DaysOld < CachePostsOlderThanDays))
             {
                 using (var db = HabraStatsEntities.CreateInstance())
                 {

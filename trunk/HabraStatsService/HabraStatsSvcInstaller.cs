@@ -13,7 +13,7 @@ namespace HabraStatsService
             var installer2 = new ServiceProcessInstaller();
             installer.ServiceName = "HabrStatsPublisher";
             installer.DisplayName = "Habrahabr Stats Publisher";
-            installer.Description = "THis service gathers and publishes Habrahabr.ru statistics to the web.";
+            installer.Description = "This service gathers and publishes Habrahabr.ru statistics to the web.";
             Installers.Add(installer);
             installer2.Account = ServiceAccount.LocalSystem;
             installer2.Password = null;
