@@ -83,6 +83,7 @@
     </Compile>
     <Compile Include="Habr.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="StatsGenerator.cs" />
     <Compile Include="Util.cs" />
   </ItemGroup>

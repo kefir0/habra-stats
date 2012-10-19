@@ -8,15 +8,51 @@
     }
   </msxsl:script>
   
-  <xsl:template match="/">
+  <xsl:template match="/Report">
     <html>
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
-        <title>Habrahabr top comments</title>
+        <title>
+          <xsl:value-of select="Title"/>
+        </title>
         <link href="comments.css" rel="stylesheet" media="all" />
       </head>
 
       <body>
+        <!-- Header with selection -->
+        <div style="width:80%; margin-left:auto; margin-right:auto;display:block;">
+          <div style="dispay:inline-block;">
+            <xsl:for-each select="//ArrayOfCommentReportAttribute">
+              <div style="display:inline; float:left; margin-right:30px;">
+                <form>
+                  <xsl:for-each select="CommentReportAttribute">
+                    <input type="radio">
+                      <xsl:attribute name="name"><xsl:value-of select="Category" /></xsl:attribute>
+                      <xsl:attribute name="value"><xsl:value-of select="Value" /></xsl:attribute>
+                      <xsl:attribute name="id"><xsl:value-of select="Value" /></xsl:attribute>
+                      <xsl:if test="position() = 1">
+                        <xsl:attribute name="checked">yes</xsl:attribute>
+                      </xsl:if>
+                    </input>
+                    <label>
+                      <xsl:attribute name="for"><xsl:value-of select="Value" /></xsl:attribute>
+                      <xsl:value-of select="Name" />
+                    </label>
+                    <br />
+                  </xsl:for-each>
+                </form>
+              </div>
+            </xsl:for-each>
+            
+            <img src="habrahabr_01.png" style="display:inline; float:right; width:100px; height:75px" />
+          </div>
+          
+        </div>
+
+        <div style="clear:both;" />
+        <hr  />
+
+        <!-- Comments -->
         <div class="comments_list" style="width:80%; margin-left:auto; margin-right:auto;">
           <xsl:for-each select="//Comment">
           

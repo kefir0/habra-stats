@@ -11,7 +11,7 @@ namespace HabrApi
     {
         // Все комбинации, напр "лучшие за год с картинками", "худшие короткие за всё время" итд
 
-        [CommentReport(Category = "Содержимое", Name = "", CategoryOrder = 2)]
+        [CommentReport(Category = "Содержимое", Name = "все", CategoryOrder = 2)]
         public static IQueryable<Comment> NoFilter(this IQueryable<Comment> comments)
         {
             return comments;
@@ -101,6 +101,16 @@ namespace HabrApi
         /// </summary>
         public static IEnumerable<KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>>> GetAllCommentReports()
         {
+            return GetAllCommentReportsEx().Select(r => new KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>>(
+                                                            string.Join(" ", r.Key.Select(a => a.Name)), r.Value));
+        }
+
+        /// <summary>
+        /// Generates list of all possible reports, in form of 'list of report attributes':'func to retrieve'.
+        /// Does this by doing all possible combinations of report methods.
+        /// </summary>
+        public static IEnumerable<KeyValuePair<IEnumerable<CommentReportAttribute>, Func<IQueryable<Comment>, IQueryable<Comment>>>> GetAllCommentReportsEx()
+        {
             // T = IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>>
             var groups = GetCommentReportMethods()
                 .OrderBy(m => m.Key.CategoryOrder)
@@ -115,13 +125,13 @@ namespace HabrApi
             yield return obj;
         }
 
-        public static KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>> CombineMethods(IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>> methodGroup)
+        public static KeyValuePair<IEnumerable<CommentReportAttribute>, Func<IQueryable<Comment>, IQueryable<Comment>>> CombineMethods(IEnumerable<KeyValuePair<CommentReportAttribute, MethodInfo>> methodGroup)
         {
-            var sb = new StringBuilder();
+            var attributes = new List<CommentReportAttribute>();
             Func<IQueryable<Comment>, IQueryable<Comment>> resultFunc = null;
             foreach (var pair in methodGroup)
             {
-                sb.Append(pair.Key.Name).Append(' ');
+                attributes.Add(pair.Key);
                 var func = (Func<IQueryable<Comment>, IQueryable<Comment>>) Delegate.CreateDelegate(typeof (Func<IQueryable<Comment>, IQueryable<Comment>>), pair.Value);
                 if (resultFunc == null)
                 {
@@ -134,7 +144,7 @@ namespace HabrApi
                 }
             }
 
-            return new KeyValuePair<string, Func<IQueryable<Comment>, IQueryable<Comment>>>(sb.ToString().Trim(), resultFunc);
+            return new KeyValuePair<IEnumerable<CommentReportAttribute>, Func<IQueryable<Comment>, IQueryable<Comment>>>(attributes, resultFunc);
         }
 
         public static IEnumerable<T> GetAllCombinations<T>(IEnumerable<IEnumerable<T>> groups, Func<T, T, T> combine)

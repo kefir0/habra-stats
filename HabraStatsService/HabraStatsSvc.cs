@@ -71,7 +71,7 @@ namespace HabraStatsService
                         var queryText = ((ObjectQuery) query).ToTraceString();
                         Log("Generating stats: " + report.Key, description: queryText);
                         var comments = query.ToArray();
-                        Uploader.Publish(generator.GenerateCommentStats(comments), fileName);
+                        Uploader.Publish(generator.GenerateHtmlReport(comments), fileName);
                     }
                 }
 
