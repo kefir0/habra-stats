@@ -16,9 +16,22 @@
           <xsl:value-of select="Title"/>
         </title>
         <link href="comments.css" rel="stylesheet" media="all" />
+        <script type="text/javascript" src="jquery-1.8.2.min.js">;</script>
       </head>
-
       <body>
+        <script>
+          $(document).ready(function(){
+          $("input").click(function(event){
+          var res = $("input:checked").map(function() {
+          return this.id;
+          }).get().join('_') + ".html";
+          //alert(res);
+          $("#navLink").attr('href', res);
+          $("#navLink").html(res);
+          });
+          });
+        </script>
+
         <!-- Header with selection -->
         <div style="width:80%; margin-left:auto; margin-right:auto;display:block;">
           <div style="dispay:inline-block;">
@@ -27,15 +40,23 @@
                 <form>
                   <xsl:for-each select="CommentReportAttribute">
                     <input type="radio">
-                      <xsl:attribute name="name"><xsl:value-of select="Category" /></xsl:attribute>
-                      <xsl:attribute name="value"><xsl:value-of select="Value" /></xsl:attribute>
-                      <xsl:attribute name="id"><xsl:value-of select="Value" /></xsl:attribute>
+                      <xsl:attribute name="name">
+                        <xsl:value-of select="Category" />
+                      </xsl:attribute>
+                      <xsl:attribute name="value">
+                        <xsl:value-of select="Value" />
+                      </xsl:attribute>
+                      <xsl:attribute name="id">
+                        <xsl:value-of select="Value" />
+                      </xsl:attribute>
                       <xsl:if test="position() = 1">
                         <xsl:attribute name="checked">yes</xsl:attribute>
                       </xsl:if>
                     </input>
                     <label>
-                      <xsl:attribute name="for"><xsl:value-of select="Value" /></xsl:attribute>
+                      <xsl:attribute name="for">
+                        <xsl:value-of select="Value" />
+                      </xsl:attribute>
                       <xsl:value-of select="Name" />
                     </label>
                     <br />
@@ -43,10 +64,10 @@
                 </form>
               </div>
             </xsl:for-each>
-            
+
             <img src="habrahabr_01.png" style="display:inline; float:right; width:100px; height:75px" />
           </div>
-          
+          <a id="navLink" />
         </div>
 
         <div style="clear:both;" />
@@ -55,14 +76,16 @@
         <!-- Comments -->
         <div class="comments_list" style="width:80%; margin-left:auto; margin-right:auto;">
           <xsl:for-each select="//Comment">
-          
+
             <div class="comment_item">
               <div class="info  ">
                 <div class="voting   ">
                   <xsl:if test="Score &gt; 0">
                     <div class="mark positive">
                       <span class="score">
-                        <xsl:attribute name="title">Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/></xsl:attribute>
+                        <xsl:attribute name="title">
+                          Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/>
+                        </xsl:attribute>
                         <xsl:value-of select="Score"/>
                       </span>
                     </div>
@@ -70,7 +93,9 @@
                   <xsl:if test="Score &lt; 0">
                     <div class="mark negative">
                       <span class="score">
-                        <xsl:attribute name="title">Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/></xsl:attribute>
+                        <xsl:attribute name="title">
+                          Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/>
+                        </xsl:attribute>
                         <xsl:value-of select="Score"/>
                       </span>
                     </div>
@@ -78,14 +103,20 @@
                 </div>
 
                 <a class="avatar">
-                  <xsl:attribute name="href">http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/</xsl:attribute>
+                  <xsl:attribute name="href">
+                    http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/
+                  </xsl:attribute>
                   <img>
-                    <xsl:attribute name="src"><xsl:value-of select="Avatar"/></xsl:attribute>
+                    <xsl:attribute name="src">
+                      <xsl:value-of select="Avatar"/>
+                    </xsl:attribute>
                   </img>
                 </a>
-                
+
                 <a class="username">
-                  <xsl:attribute name="href">http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/</xsl:attribute>
+                  <xsl:attribute name="href">
+                    http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/
+                  </xsl:attribute>
                   <xsl:value-of select="UserName"/>
                 </a>
 
@@ -95,11 +126,15 @@
                 </time>
 
                 <a class="link_to_comment">
-                  <xsl:attribute name="href"><xsl:value-of select="Url"/></xsl:attribute>#
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="Url"/>
+                  </xsl:attribute>#
                 </a>
 
                 <a class="link_to_comment">
-                  <xsl:attribute name="href"><xsl:value-of select="PostUrl"/></xsl:attribute>
+                  <xsl:attribute name="href">
+                    <xsl:value-of select="PostUrl"/>
+                  </xsl:attribute>
                   <xsl:value-of select="PostTitle"/>
                 </a>
               </div>
