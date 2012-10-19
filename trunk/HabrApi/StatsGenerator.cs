@@ -78,7 +78,7 @@ namespace HabrApi
 
         private static string MinifyHtml(string html)
         {
-            var lines = html.Split(new[] {'\n'}, StringSplitOptions.RemoveEmptyEntries).Where(s => !string.IsNullOrWhiteSpace(s));
+            var lines = html.Split(new[] { '\n' }, StringSplitOptions.RemoveEmptyEntries).Where(s => !string.IsNullOrWhiteSpace(s));
             return lines.Select(s => s.Trim()).Aggregate((s1, s2) => s1 + Environment.NewLine + s2);
         }
     }
