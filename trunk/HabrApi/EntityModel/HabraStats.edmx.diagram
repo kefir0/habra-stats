@@ -4,9 +4,9 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="ba7da6bc63224f439f2e45c76668c9be" Name="Diagram1">
-        <EntityTypeShape EntityType="habrastatsModel.Comment" Width="1.5" PointX="11.003059526441181" PointY="1.8627331563563707" />
-        <EntityTypeShape EntityType="habrastatsModel.Post" Width="1.5" PointX="1.4550415451894707" PointY="9.3047468258555739" />
+      <Diagram DiagramId="ba7da6bc63224f439f2e45c76668c9be" Name="Diagram1" ZoomLevel="97">
+        <EntityTypeShape EntityType="habrastatsModel.Comment" Width="1.5" PointX="11.749035933869443" PointY="23.320575099122046" />
+        <EntityTypeShape EntityType="habrastatsModel.Post" Width="1.5" PointX="7.482196405288855" PointY="29.532907738132824" />
         <AssociationConnector Association="habrastatsModel.FK_Comments_Post" />
       </Diagram>
     </edmx:Diagrams>

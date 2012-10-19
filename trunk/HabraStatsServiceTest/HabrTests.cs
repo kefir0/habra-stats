@@ -34,7 +34,8 @@ namespace HabrApiTests
         public void TestGenerateCommentStats()
         {
             var sg = new StatsGenerator();
-            var report = sg.GenerateTopCommentStats(GetTestPosts().Take(50));
+            var posts = GetTestPosts().Take(50).ToArray();
+            var report = sg.GenerateTopCommentStats(posts);
             Assert.IsFalse(string.IsNullOrEmpty(report));
 
             File.WriteAllText(@"e:\HabrCommentsText.html", report);
@@ -67,11 +68,11 @@ namespace HabrApiTests
             const int maxPostId = 152123;
             var habr = new Habr();
             var count = 0;
-            foreach (var cachedPost in habr.GetCachedPosts(maxPostId))
+            foreach (var cachedPost in habr.GetCachedPosts(maxPostId: maxPostId))
             {
                 count++;
-                if (count % 100 == 0)
-                Debug.WriteLine(count);
+                if (count%100 == 0)
+                    Debug.WriteLine(count);
                 yield return cachedPost;
             }
         }
