@@ -1,12 +1,12 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [HabraStats]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  Database [HabraStats]    Script Date: 19.10.2012 12:16:59 ******/
 CREATE DATABASE [HabraStats]
  CONTAINMENT = NONE
  ON  PRIMARY 
-( NAME = N'HabraStats', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats.mdf' , SIZE = 2119680KB , MAXSIZE = UNLIMITED, FILEGROWTH = 10240KB )
+( NAME = N'HabraStats', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats.mdf' , SIZE = 2129920KB , MAXSIZE = UNLIMITED, FILEGROWTH = 10240KB )
  LOG ON 
-( NAME = N'HabraStats_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats_log.ldf' , SIZE = 123904KB , MAXSIZE = 307200KB , FILEGROWTH = 10%)
+( NAME = N'HabraStats_log', FILENAME = N'C:\Program Files\Microsoft SQL Server\MSSQL11.SQLEXPRESS\MSSQL\DATA\HabraStats_log.ldf' , SIZE = 29504KB , MAXSIZE = UNLIMITED, FILEGROWTH = 10%)
 GO
 ALTER DATABASE [HabraStats] SET COMPATIBILITY_LEVEL = 110
 GO
@@ -75,14 +75,14 @@ ALTER DATABASE [HabraStats] SET TARGET_RECOVERY_TIME = 0 SECONDS
 GO
 USE [HabraStats]
 GO
-/****** Object:  User [NT AUTHORITY\SYSTEM]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  User [NT AUTHORITY\SYSTEM]    Script Date: 19.10.2012 12:17:00 ******/
 CREATE USER [NT AUTHORITY\SYSTEM] FOR LOGIN [NT AUTHORITY\SYSTEM] WITH DEFAULT_SCHEMA=[dbo]
 GO
 ALTER ROLE [db_datareader] ADD MEMBER [NT AUTHORITY\SYSTEM]
 GO
 ALTER ROLE [db_datawriter] ADD MEMBER [NT AUTHORITY\SYSTEM]
 GO
-/****** Object:  Table [dbo].[Comments]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  Table [dbo].[Comments]    Script Date: 19.10.2012 12:17:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -90,7 +90,6 @@ GO
 CREATE TABLE [dbo].[Comments](
 	[Id] [int] NOT NULL,
 	[Text] [nvarchar](max) NOT NULL,
-	[Url] [nvarchar](100) NOT NULL,
 	[PostId] [int] NOT NULL,
 	[Date] [datetime] NOT NULL,
 	[Score] [int] NOT NULL,
@@ -104,7 +103,7 @@ CREATE TABLE [dbo].[Comments](
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 
 GO
-/****** Object:  Table [dbo].[Posts]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  Table [dbo].[Posts]    Script Date: 19.10.2012 12:17:00 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -121,19 +120,19 @@ CREATE TABLE [dbo].[Posts](
 ) ON [PRIMARY]
 
 GO
-/****** Object:  Index [IX_PostId]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  Index [IX_PostId]    Script Date: 19.10.2012 12:17:00 ******/
 CREATE NONCLUSTERED INDEX [IX_PostId] ON [dbo].[Comments]
 (
 	[PostId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [IX_Score]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  Index [IX_Score]    Script Date: 19.10.2012 12:17:00 ******/
 CREATE NONCLUSTERED INDEX [IX_Score] ON [dbo].[Comments]
 (
 	[Score] DESC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, DROP_EXISTING = OFF, ONLINE = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 GO
-/****** Object:  Index [NonClusteredIndex-20121007-212623]    Script Date: 12.10.2012 10:59:59 ******/
+/****** Object:  Index [NonClusteredIndex-20121007-212623]    Script Date: 19.10.2012 12:17:00 ******/
 CREATE NONCLUSTERED INDEX [NonClusteredIndex-20121007-212623] ON [dbo].[Comments]
 (
 	[Date] ASC

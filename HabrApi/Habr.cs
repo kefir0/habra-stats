@@ -89,7 +89,7 @@ namespace HabrApi
 
         private static string GetCachePath(string postUrl)
         {
-            var fileName = postUrl.Replace("/", "-").Replace(".", "-").Replace(":", "-");
+            var fileName = postUrl.Replace("/", "-").Replace(".", "-").Replace(":", "-") + "-";
             fileName = Path.Combine(CachePath, fileName + ".html");
             return fileName;
         }

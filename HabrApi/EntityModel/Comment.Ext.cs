@@ -28,6 +28,8 @@ namespace HabrApi.EntityModel
             "<div class=\"message.*?\">(?<text>.*?)</div>",
             RegexOptions.Singleline | RegexOptions.Compiled, TimeSpan.FromMilliseconds(200));
 
+        public const string UrlFormat = "{0}#comment_{1}";
+
         public int ScoreMinus
         {
             get { return Score - ScorePlus; }
@@ -43,6 +45,16 @@ namespace HabrApi.EntityModel
         public string PostTitle
         {
             get { return Post.Title; }
+            set { } // For serialization
+        }
+
+        public string Url
+        {
+            get
+            {
+                // "http://habrahabr.ru/post/4035#comment_2"
+                return string.Format(UrlFormat, PostUrl, Id);
+            }
             set { } // For serialization
         }
 
@@ -62,18 +74,12 @@ namespace HabrApi.EntityModel
                                   Score = scorePlus - scoreMinus,
                                   ScorePlus = scorePlus,
                                   Text = c.Groups["text"].Value.Trim(),
-                                  Url = GetCommentUrl(post.Id, c.Groups["id"].Value),
                                   PostId = post.Id,
                                   UserName = c.Groups["user"].Value,
                                   Avatar = c.Groups["avatar"].Value,
                                   Date = Util.ParseRusDateTime(c.Groups["date"].Value)
                               };
             return comment;
-        }
-
-        private static string GetCommentUrl(int postId, string commentId)
-        {
-            return string.Format(Post.UrlFormat, postId).TrimEnd('/') + "#comment_" + commentId;
         }
 
         public override string ToString()

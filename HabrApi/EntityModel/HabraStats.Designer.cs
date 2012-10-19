@@ -146,19 +146,17 @@ namespace HabrApi.EntityModel
         /// </summary>
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="text">Initial value of the Text property.</param>
-        /// <param name="url">Initial value of the Url property.</param>
         /// <param name="postId">Initial value of the PostId property.</param>
         /// <param name="date">Initial value of the Date property.</param>
         /// <param name="score">Initial value of the Score property.</param>
         /// <param name="scorePlus">Initial value of the ScorePlus property.</param>
         /// <param name="userName">Initial value of the UserName property.</param>
         /// <param name="avatar">Initial value of the Avatar property.</param>
-        public static Comment CreateComment(global::System.Int32 id, global::System.String text, global::System.String url, global::System.Int32 postId, global::System.DateTime date, global::System.Int32 score, global::System.Int32 scorePlus, global::System.String userName, global::System.String avatar)
+        public static Comment CreateComment(global::System.Int32 id, global::System.String text, global::System.Int32 postId, global::System.DateTime date, global::System.Int32 score, global::System.Int32 scorePlus, global::System.String userName, global::System.String avatar)
         {
             Comment comment = new Comment();
             comment.Id = id;
             comment.Text = text;
-            comment.Url = url;
             comment.PostId = postId;
             comment.Date = date;
             comment.Score = score;
@@ -222,30 +220,6 @@ namespace HabrApi.EntityModel
         private global::System.String _Text;
         partial void OnTextChanging(global::System.String value);
         partial void OnTextChanged();
-    
-        /// <summary>
-        /// No Metadata Documentation available.
-        /// </summary>
-        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
-        [DataMemberAttribute()]
-        public global::System.String Url
-        {
-            get
-            {
-                return _Url;
-            }
-            set
-            {
-                OnUrlChanging(value);
-                ReportPropertyChanging("Url");
-                _Url = StructuralObject.SetValidValue(value, false, "Url");
-                ReportPropertyChanged("Url");
-                OnUrlChanged();
-            }
-        }
-        private global::System.String _Url;
-        partial void OnUrlChanging(global::System.String value);
-        partial void OnUrlChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

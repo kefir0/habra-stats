@@ -19,7 +19,6 @@
           </Key>
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Text" Type="nvarchar(max)" Nullable="false" />
-          <Property Name="Url" Type="nvarchar" Nullable="false" MaxLength="100" />
           <Property Name="PostId" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Score" Type="int" Nullable="false" />
@@ -34,7 +33,7 @@
           <Property Name="Id" Type="int" Nullable="false" />
           <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="1000" />
           <Property Name="Score" Type="int" Nullable="false" />
-          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comments_Post">
           <End Role="Posts" Type="habrastatsModel.Store.Posts" Multiplicity="1">
@@ -68,7 +67,6 @@
           </Key>
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Text" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
-          <Property Type="String" Name="Url" Nullable="false" MaxLength="100" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="PostId" Nullable="false" />
           <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
           <Property Type="Int32" Name="Score" Nullable="false" />
@@ -84,7 +82,7 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Title" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Score" Nullable="false" />
-          <Property Type="DateTime" Name="Date" Nullable="false" Precision="0" />
+          <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
           <NavigationProperty Name="Comments" Relationship="habrastatsModel.FK_Comments_Post" FromRole="Post" ToRole="Comment" />
         </EntityType>
         <Association Name="FK_Comments_Post">
@@ -116,7 +114,6 @@
                 <ScalarProperty Name="Score" ColumnName="Score" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="PostId" ColumnName="PostId" />
-                <ScalarProperty Name="Url" ColumnName="Url" />
                 <ScalarProperty Name="Text" ColumnName="Text" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
