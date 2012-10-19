@@ -27,24 +27,12 @@
               <div style="display:inline; float:left; margin-right:30px;">
                 <form>
                   <xsl:for-each select="CommentReportAttribute">
-                    <input type="radio">
-                      <xsl:attribute name="name">
-                        <xsl:value-of select="Category" />
-                      </xsl:attribute>
-                      <xsl:attribute name="value">
-                        <xsl:value-of select="Value" />
-                      </xsl:attribute>
-                      <xsl:attribute name="id">
-                        <xsl:value-of select="Value" />
-                      </xsl:attribute>
+                    <input type="radio" name="{Category}" value="{Value}" id="{Value}">
                       <xsl:if test="position() = 1">
                         <xsl:attribute name="checked">yes</xsl:attribute>
                       </xsl:if>
                     </input>
-                    <label>
-                      <xsl:attribute name="for">
-                        <xsl:value-of select="Value" />
-                      </xsl:attribute>
+                    <label for="{Value}">
                       <xsl:value-of select="Name" />
                     </label>
                     <br />
@@ -99,41 +87,25 @@
                 <div class="voting   ">
                   <xsl:if test="Score &gt; 0">
                     <div class="mark positive">
-                      <span class="score">
-                        <xsl:attribute name="title">
-                          Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/>
-                        </xsl:attribute>
+                      <span class="score" title="Всего {Score}: &#8593;{ScorePlus} и &#8595;{ScoreMinus}">
                         <xsl:value-of select="Score"/>
                       </span>
                     </div>
                   </xsl:if>
                   <xsl:if test="Score &lt; 0">
                     <div class="mark negative">
-                      <span class="score">
-                        <xsl:attribute name="title">
-                          Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/>
-                        </xsl:attribute>
+                      <span class="score" title="Всего {Score}: &#8593;{ScorePlus} и &#8595;{ScoreMinus}">
                         <xsl:value-of select="Score"/>
                       </span>
                     </div>
                   </xsl:if>
                 </div>
 
-                <a class="avatar">
-                  <xsl:attribute name="href">
-                    http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/
-                  </xsl:attribute>
-                  <img>
-                    <xsl:attribute name="src">
-                      <xsl:value-of select="Avatar"/>
-                    </xsl:attribute>
-                  </img>
+                <a class="avatar" href="http://habrahabr.ru/users/{UserName}/">
+                  <img src="{Avatar}" />
                 </a>
 
-                <a class="username">
-                  <xsl:attribute name="href">
-                    http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/
-                  </xsl:attribute>
+                <a class="username" href="http://habrahabr.ru/users/{UserName}/">
                   <xsl:value-of select="UserName"/>
                 </a>
 
@@ -142,16 +114,9 @@
                   <xsl:value-of select="Date"/>
                 </time>
 
-                <a class="link_to_comment">
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="Url"/>
-                  </xsl:attribute>#
-                </a>
+                <a class="link_to_comment" href="{Url}">#</a>
 
-                <a class="link_to_comment">
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="PostUrl"/>
-                  </xsl:attribute>
+                <a class="link_to_comment" href="{PostUrl}">
                   <xsl:value-of select="PostTitle"/>
                 </a>
               </div>
