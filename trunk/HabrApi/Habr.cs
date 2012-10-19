@@ -138,7 +138,6 @@ namespace HabrApi
         public int LoadRecentPostsIntoDb()
         {
             var count = 0;
-            // TODO: Look like there is a bug with nonexistent posts getting into the disk cache.....!
             foreach (var post in GetRecentPosts(ignoreCache: true).TakeWhile(post => !ShouldCache(post)))
             {
                 using (var db = HabraStatsEntities.CreateInstance())
