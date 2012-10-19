@@ -37,12 +37,24 @@ namespace HabrApi
             var comments = posts.SelectMany(p => p.Comments).OrderByDescending(c => c.Score)
                 .Take(100).ToArray();
 
-            return GenerateCommentStats(comments);
+            return GenerateHtmlReport(comments);
         }
 
-        public string GenerateCommentStats(Comment[] comments)
+        public string GenerateHtmlReport(Comment[] comments, string title = null)
         {
-            return MinifyHtml(TransformData(comments, GetCommentsXslt()));
+            var groups = CommentFilterExtensions.GetCommentReportMethods()
+                .Select(m => m.Key)
+                .OrderBy(m => m.CategoryOrder)
+                .GroupBy(m => m.Category)
+                .Select(r => r.ToArray()).ToArray();
+
+            var reportData = new Report
+                                 {
+                                     Title = title ?? "untitled",
+                                     Comments = comments,
+                                     ReportGroups = groups
+                                 };
+            return MinifyHtml(TransformData(reportData, GetCommentsXslt()));
         }
 
         private static string TransformData(object data, XslCompiledTransform transform)
@@ -58,7 +70,8 @@ namespace HabrApi
                 using (var reader = new XmlTextReader(sourceStream))
                 {
                     transform.Transform(reader, resultWriter);
-                    return Encoding.UTF8.GetString(resultStream.GetBuffer());
+                    resultStream.Seek(0, SeekOrigin.Begin);
+                    return Encoding.UTF8.GetString(resultStream.GetBuffer().Take((int) resultStream.Length).ToArray());
                 }
             }
         }

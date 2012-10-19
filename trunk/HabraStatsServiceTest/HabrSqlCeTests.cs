@@ -40,7 +40,7 @@ namespace HabrApiTests
                     var queryText = ((ObjectQuery) query).ToTraceString();  // For debugging
                     Assert.IsNotNull(queryText);
                     var comments = query.ToArray();
-                    File.WriteAllText(fileName, generator.GenerateCommentStats(comments));
+                    File.WriteAllText(fileName, generator.GenerateHtmlReport(comments));
                 }
             }
         }
@@ -60,7 +60,7 @@ namespace HabrApiTests
             {
                 var topComments = db.Comments.OrderByDescending(c => c.Score).Take(5);
                 var bottomComments = db.Comments.OrderBy(c => c.Score).Take(5);
-                var reportHtml = new StatsGenerator().GenerateCommentStats(topComments.Concat(bottomComments).ToArray());
+                var reportHtml = new StatsGenerator().GenerateHtmlReport(topComments.Concat(bottomComments).ToArray());
                 Assert.IsFalse(string.IsNullOrEmpty(reportHtml));
                 File.WriteAllText(@"e:\GenerateTestReport.html", reportHtml);
             }

@@ -43,6 +43,13 @@ namespace HabrApiTests
             }
         }
 
+        [TestMethod]
+        public void TestGenerateDynamicIndex()
+        {
+
+        }
+
+
         private static IQueryable<Comment> TestQueryable()
         {
             return new[] {new Comment {Text = "Tst"}, new Comment {Text = "Tst"}}.AsQueryable();
