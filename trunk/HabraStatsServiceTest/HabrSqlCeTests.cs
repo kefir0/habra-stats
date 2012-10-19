@@ -52,5 +52,21 @@ namespace HabrApiTests
                 .Select(r => string.Format(@"<br/><a href=""{0}.html"">{1}</a>", r.Key.ToWebPageName(), r.Key));
             File.WriteAllText(@"e:\habraIndex.html", links.Aggregate((s1, s2) => s1 + Environment.NewLine + s2));
         }
+
+                
+        [TestMethod]
+        public void GenerateTestReport()
+        {
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                var topComments = db.Comments.OrderByDescending(c => c.Score).Take(5);
+                var bottomComments = db.Comments.OrderBy(c => c.Score).Take(5);
+                var reportHtml = new StatsGenerator().GenerateCommentStats(topComments.Concat(bottomComments).ToArray());
+                Assert.IsFalse(string.IsNullOrEmpty(reportHtml));
+                File.WriteAllText(@"e:\GenerateTestReport.html", reportHtml);
+            }
+            
+        }
+
     }
 }

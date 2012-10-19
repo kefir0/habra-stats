@@ -81,7 +81,7 @@
         </div>
         <p/>
 
-        <div style="color:gray">
+        <div style="color:gray; text-align:center;">
           Generated: <xsl:value-of select="my:Now()"/><br />
           Created by kefir. naxah1 at gmail. Source: <a href="http://code.google.com/p/habra-stats/source/browse/">code.google.com/p/habra-stats</a>
         </div>
