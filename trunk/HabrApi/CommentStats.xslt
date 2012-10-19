@@ -23,31 +23,33 @@
             <div class="comment_item">
               <div class="info  ">
                 <div class="voting   ">
-                  <div class="mark positive">
-                    <span class="score">
-                      <xsl:value-of select="Score"/>
-                    </span>
-                  </div>
-                  <!--<div class="mark  negative">
-                    <span class="score" title="Всего 4: &uarr;1 и &darr;3">–2</span>
-                  </div>-->
+                  <xsl:if test="Score &gt; 0">
+                    <div class="mark positive">
+                      <span class="score">
+                        <xsl:attribute name="title">Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/></xsl:attribute>
+                        <xsl:value-of select="Score"/>
+                      </span>
+                    </div>
+                  </xsl:if>
+                  <xsl:if test="Score &lt; 0">
+                    <div class="mark negative">
+                      <span class="score">
+                        <xsl:attribute name="title">Всего <xsl:value-of select="Score"/>: &#8593;<xsl:value-of select="ScorePlus"/> и &#8595;<xsl:value-of select="ScoreMinus"/></xsl:attribute>
+                        <xsl:value-of select="Score"/>
+                      </span>
+                    </div>
+                  </xsl:if>
                 </div>
 
                 <a class="avatar">
-                  <xsl:attribute name="href">
-                    http://habrahabr.ru/<xsl:value-of select="UserName"/>/
-                  </xsl:attribute>
+                  <xsl:attribute name="href">http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/</xsl:attribute>
                   <img>
-                    <xsl:attribute name="src">
-                      <xsl:value-of select="Avatar"/>
-                    </xsl:attribute>
+                    <xsl:attribute name="src"><xsl:value-of select="Avatar"/></xsl:attribute>
                   </img>
                 </a>
                 
                 <a class="username">
-                  <xsl:attribute name="href">
-                    http://habrahabr.ru/<xsl:value-of select="UserName"/>/
-                  </xsl:attribute>
+                  <xsl:attribute name="href">http://habrahabr.ru/users/<xsl:value-of select="UserName"/>/</xsl:attribute>
                   <xsl:value-of select="UserName"/>
                 </a>
 
@@ -57,16 +59,11 @@
                 </time>
 
                 <a class="link_to_comment">
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="Url"/>
-                  </xsl:attribute>
-                  #
+                  <xsl:attribute name="href"><xsl:value-of select="Url"/></xsl:attribute>#
                 </a>
 
                 <a class="link_to_comment">
-                  <xsl:attribute name="href">
-                    <xsl:value-of select="PostUrl"/>
-                  </xsl:attribute>
+                  <xsl:attribute name="href"><xsl:value-of select="PostUrl"/></xsl:attribute>
                   <xsl:value-of select="PostTitle"/>
                 </a>
               </div>
