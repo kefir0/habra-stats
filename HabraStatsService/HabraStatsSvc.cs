@@ -2,6 +2,7 @@
 using System.Data.Objects;
 using System.Diagnostics;
 using System.Linq;
+using System.ServiceModel.Syndication;
 using System.ServiceProcess;
 using System.Threading;
 using System.Timers;
@@ -93,6 +94,21 @@ namespace HabraStatsService
             {
                 _isInProgress = false;
             }
+        }
+    
+        private void GenerateAndUploadRss()
+        {
+            // TODO: Find top 10 comments of the previous day or something
+            //System.ServiceModel.Syndication.SyndicationItem
+            //SyndicationItem
+        }
+
+        private void GenerateAndUploadStats()
+        {
+            // ЗА ПЕРИОД
+            // Всего комментариев
+            // Положительных, отрицательных
+            // Средний рейтинг
         }
     }
 }
