@@ -17,6 +17,9 @@
         </title>
         <link href="comments.css" rel="stylesheet" media="all" />
         <script type="text/javascript" src="jquery-1.8.2.min.js">;</script>
+        <style type="text/css">
+          input, label { cursor: hand; cursor: pointer; }
+        </style>
       </head>
       <body>
 
