@@ -13,7 +13,7 @@
       <head>
         <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
         <title>
-          <xsl:value-of select="Title"/>
+          <xsl:value-of select="Title"/> - Хабрастатистика
         </title>
         <link href="comments.css" rel="stylesheet" media="all" />
         <script type="text/javascript" src="jquery-1.8.2.min.js">;</script>
