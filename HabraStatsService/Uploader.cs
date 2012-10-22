@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -10,13 +11,17 @@ namespace HabraStatsService
     {
         public static void Publish(string data, string fileName)
         {
-            var creds = File.ReadAllLines(@"e:\HabrCache\creds.txt");
+            // TODO: make this better
+            var creds = File.ReadAllLines(@"e:\HabrCache\creds.txt").Where(l => !string.IsNullOrEmpty(l)).ToArray();
             var retry = 10;
             while (retry > 0)
             {
                 try
                 {
-                    Upload(creds[0], 21, "/public_html", fileName, Encoding.UTF8.GetBytes(data), creds[1], creds[2]);
+                    for (var i = 0; i < creds.Length / 3; i++)
+                    {
+                        Upload(creds[i*3], 21, string.Empty, fileName, Encoding.UTF8.GetBytes(data), creds[i*3 + 1], creds[i*3 + 2]);
+                    }
                     break;
                 }
                 catch (Exception)
