@@ -34,7 +34,11 @@ namespace HabraStatsService
         {
             Log("HabraStats started");
             _timer.Start();
-            ThreadPool.QueueUserWorkItem(o => GenerateAndUploadStatsSql());
+            ThreadPool.QueueUserWorkItem(o =>
+                                             {
+                                                 GenerateAndUploadStatsSql(downloadPosts: false);
+                                                 GenerateAndUploadStatsSql();
+                                             });
         }
 
         protected override void OnStop()
@@ -49,7 +53,7 @@ namespace HabraStatsService
             EventLog.WriteEntry(EventLogSourceName, message, EventLogEntryType.Information, eventId);
         }
 
-        private void GenerateAndUploadStatsSql()
+        private void GenerateAndUploadStatsSql(bool downloadPosts = true)
         {
             if (_isInProgress)
                 return; // Prevent multiple generators
@@ -58,9 +62,13 @@ namespace HabraStatsService
             try
             {
                 var habr = new Habr();
-                Log("Loading posts into DB");
-                var count = habr.LoadRecentPostsIntoDb();
-                Log("Posts loaded into DB: " + count);
+
+                if (downloadPosts)
+                {
+                    Log("Loading posts into DB");
+                    var count = habr.LoadRecentPostsIntoDb();
+                    Log("Posts loaded into DB: " + count);
+                }
 
                 var generator = new StatsGenerator();
                 bool first = true;
