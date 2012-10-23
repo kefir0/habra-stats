@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Serialization;
@@ -95,7 +96,9 @@ namespace HabrApi
 
         public static DateTime ParseRusDateTime(string dateTimeString)
         {
-            return DateTime.Parse(dateTimeString.Replace(" в ", " "), CultureInfo.GetCultureInfo("ru-RU"));
+            // "20 октября в 13:31" => "13:31 20 октября"
+            dateTimeString = string.Join(" ", dateTimeString.Split(new[] {" в "}, StringSplitOptions.RemoveEmptyEntries).Reverse());
+            return DateTime.Parse(dateTimeString, CultureInfo.GetCultureInfo("ru-RU"));
         }
     }
 }
