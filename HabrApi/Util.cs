@@ -97,8 +97,15 @@ namespace HabrApi
         public static DateTime ParseRusDateTime(string dateTimeString)
         {
             // "20 октября в 13:31" => "13:31 20 октября"
+            // "сегодня" и "вчера" ещё
+            var cultureInfo = CultureInfo.GetCultureInfo("ru-RU");
+            dateTimeString = dateTimeString.Replace("сегодня", DateTime.Now.ToString("dd MMMM yyyy", cultureInfo));
+            dateTimeString = dateTimeString.Replace("вчера", DateTime.Now.AddDays(-1).ToString("dd MMMM yyyy", cultureInfo));
             dateTimeString = string.Join(" ", dateTimeString.Split(new[] {" в "}, StringSplitOptions.RemoveEmptyEntries).Reverse());
-            return DateTime.Parse(dateTimeString, CultureInfo.GetCultureInfo("ru-RU"));
+            DateTime result;
+            return DateTime.TryParse(dateTimeString, cultureInfo, DateTimeStyles.AssumeLocal | DateTimeStyles.AllowWhiteSpaces, out result)
+                       ? result
+                       : DateTime.Today;
         }
     }
 }
