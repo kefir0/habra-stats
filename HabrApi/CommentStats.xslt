@@ -11,7 +11,7 @@
   <xsl:template match="/Report">
     <html>
       <head>
-        <meta http-equiv="Content-Type" content="text/html; charset=windows-1251" />
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
         <title>
           <xsl:value-of select="Title"/> - Хабрастатистика
         </title>
@@ -25,29 +25,25 @@
 
         <!-- Header with selection -->
         <div style="width:80%; margin-left:auto; margin-right:auto;display:block;">
-          <div style="dispay:inline-block;">
-            <xsl:for-each select="//ArrayOfCommentReportAttribute">
-              <div style="display:inline; float:left; margin-right:30px;">
-                <form>
-                  <xsl:for-each select="CommentReportAttribute">
-                    <input type="radio" name="{Category}" value="{Value}" id="{Value}">
-                      <xsl:if test="position() = 1">
-                        <xsl:attribute name="checked">yes</xsl:attribute>
-                      </xsl:if>
-                    </input>
-                    <label for="{Value}">
-                      <xsl:value-of select="Name" />
-                    </label>
-                    <br />
-                  </xsl:for-each>
-                </form>
-              </div>
-            </xsl:for-each>
+          <h2 style="display:inline; float:right; margin-top:37px; color: gray;" >Топ комментариев Хабра</h2>
 
-            <!--<img src="habrahabr_01.png" style="display:inline; float:right; width:100px; height:75px" />-->
-            <h2 style="display:inline; float:right; margin-top:37px; color: gray;" >Топ комментариев Хабра</h2>
-          </div>
-          <a id="navLink" />
+          <xsl:for-each select="//ArrayOfCommentReportAttribute">
+            <div style="display:inline; float:left; margin-right:30px;">
+              <form>
+                <xsl:for-each select="CommentReportAttribute">
+                  <input type="radio" name="{Category}" value="{Value}" id="{Value}">
+                    <xsl:if test="position() = 1">
+                      <xsl:attribute name="checked">yes</xsl:attribute>
+                    </xsl:if>
+                  </input>
+                  <label for="{Value}">
+                    <xsl:value-of select="Name" />
+                  </label>
+                  <br />
+                </xsl:for-each>
+              </form>
+            </div>
+          </xsl:for-each>
         </div>
 
         <script>
@@ -68,8 +64,6 @@
                   return this.id;
                 }).get().join('_') + ".html";
                 window.location.href = res;
-                //$("#navLink").attr('href', res);
-                //$("#navLink").html(res);
               });
 
             }
@@ -123,7 +117,7 @@
                   <xsl:value-of select="PostTitle"/>
                 </a>
               </div>
-              <br />
+              <div style="clear:both;" />
               <div class="message html_format">
                 <xsl:value-of select="Text" disable-output-escaping="yes" />
               </div>
@@ -136,7 +130,39 @@
 
         <div style="color:gray; text-align:center;">
           Generated: <xsl:value-of select="my:Now()"/><br />
-          Created by kefir. naxah1 at gmail. Source: <a href="http://code.google.com/p/habra-stats/source/browse/">code.google.com/p/habra-stats</a>
+          Created by kefir. naxah1 at gmail. Source: <a href="http://code.google.com/p/habra-stats/source/browse/">code.google.com/p/habra-stats</a><br />
+          Хабрастатья: <a href="http://habrahabr.ru/post/155541/">Топ комментариев Хабра — сервис, детали реализации, и немного статистики</a>
+          <!-- Yandex.Metrika counter -->
+          <script type="text/javascript">
+            <xsl:text disable-output-escaping="yes">
+            (function (d, w, c) {
+            (w[c] = w[c] || []).push(function() {
+            try {
+            w.yaCounter17855674 = new Ya.Metrika({id:17855674,
+            trackLinks:true,
+            accurateTrackBounce:true});
+            } catch(e) { }
+            });
+
+            var n = d.getElementsByTagName("script")[0],
+            s = d.createElement("script"),
+            f = function () { n.parentNode.insertBefore(s, n); };
+            s.type = "text/javascript";
+            s.async = true;
+            s.src = (d.location.protocol == "https:" ? "https:" : "http:") + "//mc.yandex.ru/metrika/watch.js";
+
+            if (w.opera == "[object Opera]") {
+            d.addEventListener("DOMContentLoaded", f);
+            } else { f(); }
+            })(document, window, "yandex_metrika_callbacks");
+          </xsl:text>
+          </script>
+          <noscript>
+            <div>
+              <img src="//mc.yandex.ru/watch/17855674" style="position:absolute; left:-9999px;" alt="" />
+            </div>
+          </noscript>
+          <!-- /Yandex.Metrika counter -->
         </div>
       </body>
       
