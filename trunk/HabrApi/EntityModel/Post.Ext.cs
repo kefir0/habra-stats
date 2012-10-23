@@ -42,7 +42,11 @@ namespace HabrApi.EntityModel
                 int score;
                 if (!int.TryParse(ScoreRegex.Match(html).Groups[1].Value, out  score))
                     score = 0;
-                var dateTimeString = DateRegex.Match(html).Groups[1].Value;
+                var dateMatch = DateRegex.Match(html);
+                if (!dateMatch.Success)
+                    return null;
+
+                var dateTimeString = dateMatch.Groups[1].Value;
                 var date = Util.ParseRusDateTime(dateTimeString);
                 var post = new Post
                                {
