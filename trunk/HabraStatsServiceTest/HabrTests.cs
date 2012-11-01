@@ -14,6 +14,12 @@ namespace HabrApiTests
     public class HabrTests
     {
         [TestMethod]
+        public void TestGetLastPostId()
+        {
+            var lastPostId = new Habr().GetLastPostId();
+        }
+
+        [TestMethod]
         public void TestGetPosts()
         {
             var posts = GetTestPosts().Take(100).OrderByDescending(p => p.Comments.Count).ToArray();
