@@ -2,7 +2,6 @@
 using System.Data.Objects;
 using System.Diagnostics;
 using System.Linq;
-using System.ServiceModel.Syndication;
 using System.ServiceProcess;
 using System.Threading;
 using System.Timers;
@@ -46,7 +45,7 @@ namespace HabraStatsService
             _timer.Stop();
         }
 
-        private static void Log(string message, int eventId = 0, string description = null)
+        public static void Log(string message, int eventId = 0, string description = null)
         {
             if (description != null)
                 message = message + Environment.NewLine + Environment.NewLine + description;
@@ -71,7 +70,7 @@ namespace HabraStatsService
                 }
 
                 var generator = new StatsGenerator();
-                bool first = true;
+                var first = true;
                 using (var db = HabraStatsEntities.CreateInstance())
                 {
                     foreach (var report in CommentFilterExtensions.GetAllCommentReports())
@@ -103,7 +102,7 @@ namespace HabraStatsService
                 _isInProgress = false;
             }
         }
-    
+
         private void GenerateAndUploadRss()
         {
             // TODO: Find top 10 comments of the previous day or something

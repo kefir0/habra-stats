@@ -13,22 +13,23 @@ namespace HabraStatsService
         {
             // TODO: make this better
             var creds = File.ReadAllLines(@"e:\HabrCache\creds.txt").Where(l => !string.IsNullOrEmpty(l)).ToArray();
-            var retry = 10;
-            while (retry > 0)
+            for (var i = 0; i < creds.Length/3; i++)
             {
-                try
+                var retry = 5;
+                while (retry > 0)
                 {
-                    for (var i = 0; i < creds.Length / 3; i++)
+                    try
                     {
                         Upload(creds[i*3], 21, string.Empty, fileName, Encoding.UTF8.GetBytes(data), creds[i*3 + 1], creds[i*3 + 2]);
+                        break;
                     }
-                    break;
+                    catch (Exception ex)
+                    {
+                        HabraStatsSvc.Log("Error during upload to: " + creds[i*3], 13, ex.ToString());
+                        Thread.Sleep(3000);
+                    }
+                    retry--;
                 }
-                catch (Exception)
-                {
-                    Thread.Sleep(3000);
-                }
-                retry--;
             }
         }
 
