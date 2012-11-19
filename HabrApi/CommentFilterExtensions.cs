@@ -40,62 +40,60 @@ namespace HabrApi
         public static IQueryable<Comment> Obscene(this IQueryable<Comment> comments)
         {
             return comments.Where(c =>
-                                  c.Text.Contains("ебло") ||
+                                  c.Text.Contains(" ебло") ||
                                   c.Text.Contains("аебал") ||
-                                  c.Text.Contains("ебать") ||
-                                  c.Text.Contains("оёб") ||
-                                  c.Text.Contains("оеб") ||
+                                  c.Text.Contains("оебал") ||
+                                  c.Text.Contains(" ебать") ||
+                                  c.Text.Contains("оебать") ||
+                                  c.Text.Contains("аебать") ||
                                   c.Text.Contains("ебало") ||
-                                  c.Text.Contains("ебаль") ||
+                                  c.Text.Contains("ебальн") ||
                                   c.Text.Contains("ёба") ||
-                                  c.Text.Contains("ебан") ||
+                                  c.Text.Contains("ебаны") ||
                                   c.Text.Contains("заёб") ||
                                   c.Text.Contains("заеб") ||
                                   c.Text.Contains("разъёб") ||
-                                  c.Text.Contains("ебн") ||
+                                  c.Text.Contains(" ебнул") ||
+                                  c.Text.Contains("ебнут") ||
                                   c.Text.Contains("ёбн") ||
                                   c.Text.Contains("ебли") ||
                                   c.Text.Contains("бляд") ||
-                                  c.Text.Contains("блять") ||
+                                  c.Text.Contains(" блять") ||
                                   c.Text.Contains("блеа") ||
                                   c.Text.Contains("пизд") ||
                                   c.Text.Contains("хуй") ||
                                   c.Text.Contains("хуя") ||
                                   c.Text.Contains("хуё") ||
-                                  c.Text.Contains("хуе") ||
+                                  c.Text.Contains("хуел") ||
+                                  c.Text.Contains("хуев") ||
+                                  c.Text.Contains("хуен") ||
                                   c.Text.Contains("пизд")
                 );
         }
 
-        //[CommentReport(Category = "Содержимое", Name = "топики зла", CategoryOrder = 2)]
-        //public static IQueryable<Comment> PostsOfEvil(this IQueryable<Comment> comments)
-        //{
-        //    return comments.GroupBy(c => c.Post)
-        //        .OrderByDescending(g => -g.Sum(c => c.Score))
-        //        .Take(100).ToArray()
-        //        .Select(g => new Comment
-        //                         {
-        //                             Date = g.Key.Date,
-        //                             Score = g.Key.Score,
-        //                             Post = g.Key,
-        //                             Text = "POST OF EVIL (todo)"
-        //                         })
-        //        .AsQueryable();
-        //}
+        [CommentReport(Category = "Содержимое", Name = "топики зла", CategoryOrder = 2)]
+        public static IQueryable<Comment> PostsOfEvil(this IQueryable<Comment> comments)
+        {
+            // Выбирает по одному худшему комментарию из каждого топика зла
+            return comments
+                .GroupBy(c => c.Post)
+                .Where(g => g.Average(c => c.Score) < 0 && g.Count(c => c.Score > 0)*20 < g.Count())
+                .OrderBy(g => g.Sum(c => c.Score))
+                .Select(g => g.OrderBy(c => c.Score).FirstOrDefault())
+                .Where(c => c != null);
+        }
 
-        //[CommentReport(Category = "Содержимое", Name = "топики добра", CategoryOrder = 2)]
-        //public static IQueryable<Comment> PostsOfGood(this IQueryable<Comment> comments)
-        //{
-        //    return comments.GroupBy(c => c.Post)
-        //        .OrderByDescending(g => g.Sum(c => c.Score))
-        //        .Select(g => new Comment
-        //        {
-        //            Date = g.Key.Date,
-        //            Score = g.Key.Score,
-        //            Post = g.Key,
-        //            Text = "POST OF GOOD (todo)"
-        //        });
-        //}
+        [CommentReport(Category = "Содержимое", Name = "топики добра", CategoryOrder = 2)]
+        public static IQueryable<Comment> PostsOfGood(this IQueryable<Comment> comments)
+        {
+            // Выбирает по одному лучшему комментарию из каждого топика добра
+            return comments
+                .GroupBy(c => c.Post)
+                .Where(g => g.Average(c => c.Score) > 5 && g.Count(c => c.Score < 0)*20 < g.Count())
+                .OrderByDescending(g => g.Sum(c => c.Score))
+                .Select(g => g.OrderByDescending(c => c.Score).FirstOrDefault())
+                .Where(c => c != null);
+        }
 
         [CommentReport(Category = "Рейтинг", Name = "лучшие", CategoryOrder = 1)]
         public static IQueryable<Comment> Best(this IQueryable<Comment> comments)
