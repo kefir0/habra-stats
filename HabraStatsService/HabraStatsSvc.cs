@@ -77,7 +77,7 @@ namespace HabraStatsService
                     {
                         var fileName = string.Format("{0}.html", report.Key.ToWebPageName());
                         var query = report.Value(db.Comments).Take(50);
-                        var queryText = ((ObjectQuery) query).ToTraceString();
+                        var queryText = query is ObjectQuery ? ((ObjectQuery) query).ToTraceString() : string.Empty;
                         Log("Generating stats: " + report.Key, description: queryText);
                         var comments = query.ToArray();
                         var htmlReport = generator.GenerateHtmlReport(comments, report.Key);
