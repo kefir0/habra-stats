@@ -9,7 +9,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace HabrApiTests
 {
     [TestClass]
-    public class HabrSqlCeTests
+    public class HabrDbTests
     {
         [TestMethod]
         public void UpsertTest()
@@ -37,8 +37,6 @@ namespace HabrApiTests
                 {
                     var fileName = string.Format(@"E:\{0}.html", report.Key);
                     var query = report.Value(db.Comments).Take(10);
-                    var queryText = ((ObjectQuery) query).ToTraceString();  // For debugging
-                    Assert.IsNotNull(queryText);
                     var comments = query.ToArray();
                     File.WriteAllText(fileName, generator.GenerateHtmlReport(comments));
                 }
