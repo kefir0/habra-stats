@@ -77,7 +77,7 @@ namespace HabrApi
             // Выбирает по одному худшему комментарию из каждого топика зла
             return comments
                 .GroupBy(c => c.Post)
-                .Where(g => g.Average(c => c.Score) < 0 && g.Count(c => c.Score > 0)*20 < g.Count())
+                .Where(g => g.Average(c => c.Score) < -3 && g.Count(c => c.Score > 0)*20 < g.Count())
                 .OrderBy(g => g.Sum(c => c.Score))
                 .Select(g => g.OrderBy(c => c.Score).FirstOrDefault())
                 .Where(c => c != null);
@@ -89,7 +89,7 @@ namespace HabrApi
             // Выбирает по одному лучшему комментарию из каждого топика добра
             return comments
                 .GroupBy(c => c.Post)
-                .Where(g => g.Average(c => c.Score) > 5 && g.Count(c => c.Score < 0)*20 < g.Count())
+                .Where(g => g.Average(c => c.Score) > 10 && g.Count(c => c.Score < 0)*30 < g.Count())
                 .OrderByDescending(g => g.Sum(c => c.Score))
                 .Select(g => g.OrderByDescending(c => c.Score).FirstOrDefault())
                 .Where(c => c != null);
