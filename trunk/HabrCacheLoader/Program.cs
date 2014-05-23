@@ -47,7 +47,7 @@ namespace HabrCacheLoader
             Console.WriteLine("Posts to load: " + notCachedPosts.Length);
             foreach (var id in notCachedPosts)
             {
-                var post = habr.DownloadPost(id, skipComments: true, ignoreCache:true);
+                var post = habr.DownloadPost(id, skipComments: false, ignoreCache:false);
 
                 if (post != null)
                 {
