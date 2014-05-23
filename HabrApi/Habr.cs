@@ -13,7 +13,7 @@ namespace HabrApi
     public class Habr
     {
         private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
-        private const string CachePath = @"e:\HabrCache";
+        private const string CachePath = @"f:\HabrCache";
         private const double CachePostsOlderThanDays = 6;
 
         public string DownloadString(string url)
@@ -22,7 +22,7 @@ namespace HabrApi
             {
                 try
                 {
-                    var wc = new WebClient { Encoding = Encoding.UTF8 };
+                    var wc = new WebClientEx { Encoding = Encoding.UTF8 };
                     Console.WriteLine("Downloading " + url);
                     var result = wc.DownloadString(url);
                     if (!string.IsNullOrWhiteSpace(result))

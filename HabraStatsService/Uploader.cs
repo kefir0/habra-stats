@@ -12,7 +12,7 @@ namespace HabraStatsService
         public static void Publish(string data, string fileName)
         {
             // TODO: make this better
-            var creds = File.ReadAllLines(@"e:\HabrCache\creds.txt").Where(l => !string.IsNullOrEmpty(l) && !l.Trim().StartsWith("#"))
+            var creds = File.ReadAllLines(@"f:\HabrCache\creds.txt").Where(l => !string.IsNullOrEmpty(l) && !l.Trim().StartsWith("#"))
                 .Select(x => x.Trim())
                 .ToArray();
             for (var i = 0; i < creds.Length/3; i++)
