@@ -14,7 +14,7 @@ namespace HabraStatsService
     public partial class HabraStatsSvc : ServiceBase
     {
         public const string EventLogSourceName = "HabraStatsSvc";
-        private const int HourPeriod = 2; // timer period in hours
+        private const int HourPeriod = 3; // timer period in hours
         private readonly Timer _timer = new Timer(HourPeriod*60*60*1000);
         private bool _isInProgress;
 

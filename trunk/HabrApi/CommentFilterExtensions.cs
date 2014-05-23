@@ -71,7 +71,7 @@ namespace HabrApi
                 );
         }
 
-        [CommentReport(Category = "Содержимое", Name = "топики зла", CategoryOrder = 2)]
+        //[CommentReport(Category = "Содержимое", Name = "топики зла", CategoryOrder = 2)]
         public static IQueryable<Comment> PostsOfEvil(this IQueryable<Comment> comments)
         {
             // Выбирает по одному худшему комментарию из каждого топика зла
@@ -83,7 +83,7 @@ namespace HabrApi
                 .Where(c => c != null);
         }
 
-        [CommentReport(Category = "Содержимое", Name = "топики добра", CategoryOrder = 2)]
+        //[CommentReport(Category = "Содержимое", Name = "топики добра", CategoryOrder = 2)]
         public static IQueryable<Comment> PostsOfGood(this IQueryable<Comment> comments)
         {
             // Выбирает по одному лучшему комментарию из каждого топика добра

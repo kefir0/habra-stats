@@ -11,7 +11,8 @@ namespace HabrCacheLoader
         private static void Main()
         {
             //DownloadIntoCache();
-            LoadIntoDb();
+            //LoadIntoDb();
+            DownloadIntoCacheAndDb();
         }
 
         private static void DownloadIntoCache()
@@ -25,6 +26,38 @@ namespace HabrCacheLoader
             foreach (var id in notCachedPosts)
             {
                 habr.DownloadPost(id, skipComments: true);
+                loadedCount++;
+                var runTime = DateTime.Now - startTime;
+                var postsPerSecond = (loadedCount)/runTime.TotalSeconds;
+                var eta = TimeSpan.FromSeconds((notCachedPosts.Length - loadedCount)/postsPerSecond);
+                Console.WriteLine("[{2}] {0:dd\\.hh\\:mm\\:ss}; P/s: {1:0.0}; ETA: {3:dd\\.hh\\:mm\\:ss}; {4} of {5}", runTime, postsPerSecond, id, eta, loadedCount, notCachedPosts.Length);
+            }
+        }
+
+        private static void DownloadIntoCacheAndDb()
+        {
+            var habr = new Habr();
+            var lastPostId = habr.GetLastPostId();
+            var startTime = DateTime.Now;
+            var loadedCount = 0;
+            const int startPostId = 223795;
+            var notCachedPosts = Enumerable.Range(startPostId, lastPostId - startPostId)
+                //.Where(i => !habr.IsInCache(i))
+                .ToArray();
+            Console.WriteLine("Posts to load: " + notCachedPosts.Length);
+            foreach (var id in notCachedPosts)
+            {
+                var post = habr.DownloadPost(id, skipComments: true, ignoreCache:true);
+
+                if (post != null)
+                {
+                    using (var db = new HabraStatsEntities())
+                    {
+                        db.UpsertPost(post);
+                        db.SaveChanges();
+                    }
+                }
+
                 loadedCount++;
                 var runTime = DateTime.Now - startTime;
                 var postsPerSecond = (loadedCount)/runTime.TotalSeconds;
