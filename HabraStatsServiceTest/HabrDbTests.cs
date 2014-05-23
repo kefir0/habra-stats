@@ -62,8 +62,35 @@ namespace HabrApiTests
                 Assert.IsFalse(string.IsNullOrEmpty(reportHtml));
                 File.WriteAllText(@"e:\GenerateTestReport.html", reportHtml);
             }
-            
         }
+
+        [TestMethod]
+        public void GetTodaysCommentsTest()
+        {
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                var date = DateTime.Now.AddDays(-1);
+                var comments = db.Comments.Where(x => x.Date > date).OrderByDescending(x => x.Score).ToArray();
+                Assert.IsTrue(comments.Any());
+            }
+        }
+
+        [TestMethod]
+        public void FirstReportTest()
+        {
+            var generator = new StatsGenerator();
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                foreach (var report in CommentFilterExtensions.GetAllCommentReports().Take(1))
+                {
+                    var query = report.Value(db.Comments);
+                    var comments = query.ToArray();
+                    Assert.IsTrue(comments.Any());
+                }
+            }
+        }
+
+
 
     }
 }
