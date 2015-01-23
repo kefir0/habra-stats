@@ -1,4 +1,7 @@
-﻿namespace HabrApi.EntityModel
+﻿using System.Globalization;
+using System.Linq;
+
+namespace HabrApi.EntityModel
 {
     public partial class HabraStatsEntities
     {
@@ -13,6 +16,14 @@
         public void UpsertPost(Post post)
         {
             ExecuteStoreCommand("DELETE FROM POSTS WHERE ID=" + post.Id);
+            
+            var commentIds = post.Comments.Select(x => x.Id.ToString(CultureInfo.InvariantCulture)).ToList();
+            if (commentIds.Any())
+            {
+                var commentIdsString = commentIds.Aggregate((x, y) => string.Format("{0}, {1}", x, y));
+                ExecuteStoreCommand("DELETE FROM COMMENTS WHERE ID IN (" + commentIdsString + ")");
+            }
+
             Posts.AddObject(post);
         }
 
