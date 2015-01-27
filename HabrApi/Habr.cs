@@ -12,7 +12,7 @@ namespace HabrApi
 {
     public class Habr
     {
-        private const string RecentPostsUrl = "http://habrahabr.ru/posts/collective/new/";
+        private const string RecentPostsUrl = "http://habrahabr.ru/";
         private const string CachePath = @"f:\HabrCache";
         private const double CachePostsOlderThanDays = 6;
 
@@ -84,7 +84,7 @@ namespace HabrApi
 
         private static bool ShouldCache(Post post)
         {
-            return post == null || post.DaysOld > CachePostsOlderThanDays;
+            return post != null && post.DaysOld > CachePostsOlderThanDays;
         }
 
         private static string GetCachePath(string postUrl)

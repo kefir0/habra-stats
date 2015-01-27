@@ -40,14 +40,14 @@ namespace HabrCacheLoader
             var lastPostId = habr.GetLastPostId();
             var startTime = DateTime.Now;
             var loadedCount = 0;
-            const int startPostId = 223795;
+            const int startPostId = 243997;
             var notCachedPosts = Enumerable.Range(startPostId, lastPostId - startPostId)
                 //.Where(i => !habr.IsInCache(i))
                 .ToArray();
             Console.WriteLine("Posts to load: " + notCachedPosts.Length);
             foreach (var id in notCachedPosts)
             {
-                var post = habr.DownloadPost(id, skipComments: false, ignoreCache:false);
+                var post = habr.DownloadPost(id, skipComments: false, ignoreCache:true);
 
                 if (post != null)
                 {
