@@ -38,7 +38,7 @@ namespace HabrApi.EntityModel
 
         public string PostUrl
         {
-            get { return Post.GetUrl(PostId); }
+            get { return Post.Url; }
             set { } // For serialization
         }
 
