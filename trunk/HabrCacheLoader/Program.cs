@@ -40,7 +40,7 @@ namespace HabrCacheLoader
             var lastPostId = habr.GetLastPostId();
             var startTime = DateTime.Now;
             var loadedCount = 0;
-            const int startPostId = 243997;
+            const int startPostId = 247410;
             var notCachedPosts = Enumerable.Range(startPostId, lastPostId - startPostId)
                 //.Where(i => !habr.IsInCache(i))
                 .ToArray();

@@ -65,7 +65,7 @@ namespace HabrApiTests
         [TestMethod]
         public void TestDownloadPost()
         {
-            var post = new Habr().DownloadPost(243997);
+            var post = new Habr().DownloadPost(247395);
             Assert.IsNotNull(post);
         }
 

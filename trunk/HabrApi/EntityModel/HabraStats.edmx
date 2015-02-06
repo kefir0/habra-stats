@@ -34,6 +34,7 @@
           <Property Name="Title" Type="nvarchar" Nullable="false" MaxLength="1000" />
           <Property Name="Score" Type="int" Nullable="false" />
           <Property Name="Date" Type="datetime" Nullable="false" />
+		  <Property Name="SiteId" Type="int" Nullable="false" />
         </EntityType>
         <Association Name="FK_Comments_Post">
           <End Role="Posts" Type="habrastatsModel.Store.Posts" Multiplicity="1">
@@ -82,6 +83,7 @@
           <Property Type="Int32" Name="Id" Nullable="false" />
           <Property Type="String" Name="Title" Nullable="false" MaxLength="1000" FixedLength="false" Unicode="true" />
           <Property Type="Int32" Name="Score" Nullable="false" />
+          <Property Type="Int32" Name="SiteId" Nullable="false" />
           <Property Type="DateTime" Name="Date" Nullable="false" Precision="3" />
           <NavigationProperty Name="Comments" Relationship="habrastatsModel.FK_Comments_Post" FromRole="Post" ToRole="Comment" />
         </EntityType>
@@ -122,6 +124,7 @@
           <EntitySetMapping Name="Posts">
             <EntityTypeMapping TypeName="habrastatsModel.Post">
               <MappingFragment StoreEntitySet="Posts">
+                <ScalarProperty Name="SiteId" ColumnName="SiteId" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Score" ColumnName="Score" />
                 <ScalarProperty Name="Title" ColumnName="Title" />

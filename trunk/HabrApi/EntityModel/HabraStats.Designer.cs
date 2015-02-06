@@ -427,13 +427,15 @@ namespace HabrApi.EntityModel
         /// <param name="id">Initial value of the Id property.</param>
         /// <param name="title">Initial value of the Title property.</param>
         /// <param name="score">Initial value of the Score property.</param>
+        /// <param name="siteId">Initial value of the SiteId property.</param>
         /// <param name="date">Initial value of the Date property.</param>
-        public static Post CreatePost(global::System.Int32 id, global::System.String title, global::System.Int32 score, global::System.DateTime date)
+        public static Post CreatePost(global::System.Int32 id, global::System.String title, global::System.Int32 score, global::System.Int32 siteId, global::System.DateTime date)
         {
             Post post = new Post();
             post.Id = id;
             post.Title = title;
             post.Score = score;
+            post.SiteId = siteId;
             post.Date = date;
             return post;
         }
@@ -516,6 +518,30 @@ namespace HabrApi.EntityModel
         private global::System.Int32 _Score;
         partial void OnScoreChanging(global::System.Int32 value);
         partial void OnScoreChanged();
+    
+        /// <summary>
+        /// No Metadata Documentation available.
+        /// </summary>
+        [EdmScalarPropertyAttribute(EntityKeyProperty=false, IsNullable=false)]
+        [DataMemberAttribute()]
+        public global::System.Int32 SiteId
+        {
+            get
+            {
+                return _SiteId;
+            }
+            set
+            {
+                OnSiteIdChanging(value);
+                ReportPropertyChanging("SiteId");
+                _SiteId = StructuralObject.SetValidValue(value, "SiteId");
+                ReportPropertyChanged("SiteId");
+                OnSiteIdChanged();
+            }
+        }
+        private global::System.Int32 _SiteId;
+        partial void OnSiteIdChanging(global::System.Int32 value);
+        partial void OnSiteIdChanged();
     
         /// <summary>
         /// No Metadata Documentation available.

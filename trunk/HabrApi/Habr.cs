@@ -53,7 +53,7 @@ namespace HabrApi
             var fileName = GetCachePath(url);
             if (!ignoreCache && File.Exists(fileName))
             {
-                // File exists: check if it is valid, parse to retrive post date
+                // File exists: check if it is valid, parse to retrieve post date
                 // And determine whether this post can be loaded from cache
                 var cachedHtml = File.ReadAllText(fileName);
                 if (!string.IsNullOrWhiteSpace(cachedHtml))
@@ -77,9 +77,11 @@ namespace HabrApi
 
         public bool IsInCache(int postId)
         {
-            var url = Post.GetUrl(postId);
-            var fileName = GetCachePath(url);
-            return File.Exists(fileName) && new FileInfo(fileName).Length > 10;
+            return Post.GetUrlVariants(postId).Any(url =>
+            {
+                var fileName = GetCachePath(url);
+                return File.Exists(fileName) && new FileInfo(fileName).Length > 10;
+            });
         }
 
         private static bool ShouldCache(Post post)
