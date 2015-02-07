@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace HabrApi.EntityModel
 {
@@ -7,6 +8,8 @@ namespace HabrApi.EntityModel
     /// </summary>
     public class Site
     {
+        public const string UrlFormat = "{0}/post/{1}";
+
         public static readonly IReadOnlyCollection<Site> Instances = new List<Site>
         {
             new Site(0, "http://habrahabr.ru"),
@@ -31,6 +34,11 @@ namespace HabrApi.EntityModel
         public string Url
         {
             get { return _url; }
+        }
+
+        public string GetUrl(int postId)
+        {
+            return string.Format(UrlFormat, Url, postId);
         }
     }
 }
