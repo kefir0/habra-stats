@@ -65,7 +65,16 @@ namespace HabrApiTests
         [TestMethod]
         public void TestDownloadPost()
         {
+            // habr
             var post = new Habr().DownloadPost(247395);
+            Assert.IsNotNull(post);
+            
+            // geekTimes
+            post = new Habr().DownloadPost(245486);
+            Assert.IsNotNull(post);
+            
+            // megaMozg
+            post = new Habr().DownloadPost(10376);
             Assert.IsNotNull(post);
         }
 

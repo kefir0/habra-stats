@@ -68,7 +68,7 @@ namespace HabrApi
                 var cachedHtml = File.ReadAllText(fileName);
                 if (!string.IsNullOrWhiteSpace(cachedHtml))
                 {
-                    var cachedPost = Post.Parse(cachedHtml, postId, skipComments);
+                    var cachedPost = Post.Parse(cachedHtml, postId, site, skipComments);
                     if (ShouldCache(cachedPost))
                     {
                         Console.WriteLine("Returning from cache: " + postId);
@@ -77,7 +77,7 @@ namespace HabrApi
                 }
             }
             var html = DownloadString(url);
-            var post = Post.Parse(html, postId, skipComments);
+            var post = Post.Parse(html, postId, site, skipComments);
             if (ShouldCache(post))
             {
                 File.WriteAllText(fileName, html);
@@ -135,7 +135,7 @@ namespace HabrApi
                     var cachePath = GetCachePath(site.GetUrl(i));
                     if (File.Exists(cachePath))
                     {
-                        var post = Post.Parse(File.ReadAllText(cachePath), i);
+                        var post = Post.Parse(File.ReadAllText(cachePath), i, site);
                         if (post != null)
                             yield return post;
                     }

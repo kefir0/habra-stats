@@ -32,10 +32,17 @@ namespace HabrApi.EntityModel
             return String.Format("[{0}] {1}", Id, Title);
         }
 
-        public static Post Parse(string html, int id, bool skipComments = false, bool includeZeroVoteComments = false)
+        public static Post Parse(string html, int id, Site site, bool skipComments = false, bool includeZeroVoteComments = false)
         {
             if (string.IsNullOrEmpty(html))
+            {
                 return null;
+            }
+
+            if (site == null)
+            {
+                throw new ArgumentNullException("site");
+            }
 
             try
             {
@@ -54,7 +61,8 @@ namespace HabrApi.EntityModel
                                    Id = id,
                                    Title = title,
                                    Date = date,
-                                   Score = score
+                                   Score = score,
+                                   SiteId = site.Id
                                };
 
                 if (!skipComments)
