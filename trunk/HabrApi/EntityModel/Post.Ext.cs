@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -7,7 +6,6 @@ namespace HabrApi.EntityModel
 {
     public partial class Post
     {
-        public const string UrlFormat = "{0}/post/{1}";
         private static readonly Regex TitleRegex = new Regex("<title>(.*) / .*</title>", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex DateRegex = new Regex("<div class=\"published\">(.*?)</div>", RegexOptions.Singleline | RegexOptions.Compiled);
         private static readonly Regex ScoreRegex = new Regex("<span class=\"score\" .*?>(.*?)</span>", RegexOptions.Singleline | RegexOptions.Compiled);
@@ -15,7 +13,7 @@ namespace HabrApi.EntityModel
 
         public string Url
         {
-            get { return GetUrl(Id, Site); }
+            get { return Site.GetUrl(Id); }
         }
 
         public double DaysOld
@@ -27,25 +25,6 @@ namespace HabrApi.EntityModel
         {
             get { return _site; }
             private set { _site = value; }
-        }
-
-        public static string GetUrl(int postId)
-        {
-            return GetUrl(postId, Site.Instances.First());
-        }
-
-        public static string GetUrl(int postId, Site site)
-        {
-            if (site == null)
-            {
-                throw new ArgumentNullException("site");
-            }
-            return String.Format(UrlFormat, site.Url, postId);
-        }
-
-        public static IEnumerable<string> GetUrlVariants(int postId)
-        {
-            return Site.Instances.Select(x => GetUrl(postId, x));
         }
 
         public override string ToString()

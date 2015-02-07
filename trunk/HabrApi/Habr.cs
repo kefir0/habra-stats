@@ -49,7 +49,17 @@ namespace HabrApi
 
         public Post DownloadPost(int postId, bool skipComments = false, bool ignoreCache = false)
         {
-            var url = Post.GetUrl(postId);
+            return Site.Instances.Select(site => DownloadPost(postId, site, skipComments, ignoreCache)).FirstOrDefault(post => post != null);
+        }
+
+        public Post DownloadPost(int postId, Site site, bool skipComments = false, bool ignoreCache = false)
+        {
+            if (site == null)
+            {
+                throw new ArgumentNullException("site");
+            }
+
+            var url = site.GetUrl(postId);
             var fileName = GetCachePath(url);
             if (!ignoreCache && File.Exists(fileName))
             {
@@ -77,7 +87,7 @@ namespace HabrApi
 
         public bool IsInCache(int postId)
         {
-            return Post.GetUrlVariants(postId).Any(url =>
+            return Site.Instances.Select(x => x.GetUrl(postId)).Any(url =>
             {
                 var fileName = GetCachePath(url);
                 return File.Exists(fileName) && new FileInfo(fileName).Length > 10;
@@ -120,18 +130,23 @@ namespace HabrApi
 
             for (var i = startPostId; i <= lastPostId; i++)
             {
-                if (!IsInCache(i)) continue;
-                var cachePath = GetCachePath(Post.GetUrl(i));
-                var post = Post.Parse(File.ReadAllText(cachePath), i);
-                if (post != null)
-                    yield return post;
+                foreach (var site in Site.Instances)
+                {
+                    var cachePath = GetCachePath(site.GetUrl(i));
+                    if (File.Exists(cachePath))
+                    {
+                        var post = Post.Parse(File.ReadAllText(cachePath), i);
+                        if (post != null)
+                            yield return post;
+                    }
+                }
             }
         }
 
         public int GetLastPostId()
         {
             var lastPostHtml = DownloadString(RecentPostsUrl);
-            var lastPostRegex = new Regex(string.Format(Post.UrlFormat, "([0-9]+)"));
+            var lastPostRegex = new Regex(string.Format(Site.UrlFormat, Site.Instances.First().Url, "([0-9]+)"));
             var matches = lastPostRegex.Matches(lastPostHtml);
             var maxId = matches.OfType<Match>().Max(match => int.Parse(match.Groups[1].Value));
             return maxId + 5; // compensate error
