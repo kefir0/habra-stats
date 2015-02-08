@@ -42,10 +42,10 @@ namespace HabrCacheLoader
             var loadedCount = 0;
             const int startPostId = 249601;
             var notCachedPosts = Enumerable.Range(startPostId, lastPostId - startPostId).ToArray();
-            using (var db = new HabraStatsEntities())
-            {
-                notCachedPosts = db.GetMissingPostIds(6244).ToArray();
-            }
+            //using (var db = new HabraStatsEntities())
+            //{
+            //    notCachedPosts = db.GetMissingPostIds(6244).ToArray();
+            //}
 
             Console.WriteLine("Posts to load: " + notCachedPosts.Length);
             foreach (var id in notCachedPosts)
