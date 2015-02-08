@@ -60,13 +60,13 @@ namespace HabraStatsService
 
             try
             {
-                var habr = new Habr();
-
                 if (downloadPosts)
                 {
                     Log("Loading posts into DB");
-                    var count = habr.LoadRecentPostsIntoDb();
-                    Log("Posts loaded into DB: " + count);
+                    var sw = Stopwatch.StartNew();
+                    var count = Habr.LoadRecentPostsIntoDb();
+                    var elapsed = sw.Elapsed;
+                    Log(string.Format("Posts loaded into DB: {0}; Elapsed: {1}; Posts/second: {2}", count, elapsed, count / elapsed.TotalSeconds));
                 }
 
                 var generator = new StatsGenerator();

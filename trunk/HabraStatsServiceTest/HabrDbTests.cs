@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Objects;
 using System.IO;
 using System.Linq;
 using HabrApi;
@@ -18,12 +16,12 @@ namespace HabrApiTests
             // Run twice to ensure update
             using (var db = HabraStatsEntities.CreateInstance())
             {
-                db.UpsertPost(new Habr().DownloadPost(153951));
+                db.UpsertPost(Habr.DownloadPost(153951));
                 db.SaveChanges();
             }
             using (var db = HabraStatsEntities.CreateInstance())
             {
-                db.UpsertPost(new Habr().DownloadPost(153951));
+                db.UpsertPost(Habr.DownloadPost(153951));
                 db.SaveChanges();
             }
         }
