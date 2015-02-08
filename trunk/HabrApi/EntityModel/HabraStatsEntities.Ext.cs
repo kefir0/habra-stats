@@ -34,11 +34,11 @@ namespace HabrApi.EntityModel
             CommandTimeout = 60*5;
         }
 
-        public IEnumerable<int> GetMissingPostIds(int? maxPostId = null)
+        public IEnumerable<int> GetMissingPostIds(int minPostId = 0, int? maxPostId = null)
         {
             var ids = new HashSet<int>(Posts.Select(x => x.Id));
             maxPostId = maxPostId ?? (ids.Any() ? ids.Max() : -1);
-            for (int i = 0; i <= maxPostId; i++)
+            for (int i = minPostId; i <= maxPostId; i++)
             {
                 if (!ids.Contains(i))
                 {

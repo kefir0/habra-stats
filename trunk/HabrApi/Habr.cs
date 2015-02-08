@@ -12,7 +12,6 @@ namespace HabrApi
 {
     public class Habr
     {
-        private const string RecentPostsUrl = "http://habrahabr.ru/";
         private const string CachePath = @"f:\HabrCache";
         private const double CachePostsOlderThanDays = 6;
 
@@ -107,21 +106,6 @@ namespace HabrApi
         }
 
         /// <summary>
-        /// Enumerates all posts from newest to oldest.
-        /// </summary>
-        public IEnumerable<Post> GetRecentPosts(bool ignoreCache = false)
-        {
-            var lastPostId = GetLastPostId();
-
-            for (var i = lastPostId; i >= 0; i--)
-            {
-                var post = DownloadPost(i, ignoreCache: ignoreCache);
-                if (post != null)
-                    yield return post;
-            }
-        }
-
-        /// <summary>
         /// Enumerates all valid posts in cache.
         /// </summary>
         public IEnumerable<Post> GetCachedPosts(int startPostId = 0, int? maxPostId = null)
@@ -143,10 +127,11 @@ namespace HabrApi
             }
         }
 
-        public int GetLastPostId()
+        public int GetLastPostId(Site site = null)
         {
-            var lastPostHtml = DownloadString(RecentPostsUrl);
-            var lastPostRegex = new Regex(string.Format(Site.UrlFormat, Site.Instances.First().Url, "([0-9]+)"));
+            site = site ?? Site.Instances.First();
+            var lastPostHtml = DownloadString(site.Url);
+            var lastPostRegex = new Regex(string.Format(Site.UrlFormat, site.Url, "([0-9]+)"));
             var matches = lastPostRegex.Matches(lastPostHtml);
             var maxId = matches.OfType<Match>().Max(match => int.Parse(match.Groups[1].Value));
             return maxId + 5; // compensate error
@@ -155,17 +140,34 @@ namespace HabrApi
         public int LoadRecentPostsIntoDb()
         {
             var count = 0;
-            foreach (var post in GetRecentPosts(ignoreCache: true).TakeWhile(post => post.DaysOld < CachePostsOlderThanDays))
+            foreach (var site in Site.Instances)
             {
-                using (var db = HabraStatsEntities.CreateInstance())
+                foreach (var post in GetRecentPosts(site, true).TakeWhile(post => post.DaysOld < CachePostsOlderThanDays))
                 {
-                    db.UpsertPost(post);
-                    db.SaveChanges();
-                    count++;
+                    using (var db = HabraStatsEntities.CreateInstance())
+                    {
+                        db.UpsertPost(post);
+                        db.SaveChanges();
+                        count++;
+                    }
                 }
             }
             return count;
         }
 
+        /// <summary>
+        /// Enumerates all posts from newest to oldest.
+        /// </summary>
+        private IEnumerable<Post> GetRecentPosts(Site site, bool ignoreCache = false)
+        {
+            var lastPostId = GetLastPostId(site);
+
+            for (var i = lastPostId; i >= 0; i--)
+            {
+                var post = DownloadPost(i, site, ignoreCache: ignoreCache);
+                if (post != null)
+                    yield return post;
+            }
+        }
     }
 }

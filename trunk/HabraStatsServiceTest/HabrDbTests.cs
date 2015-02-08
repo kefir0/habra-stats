@@ -36,15 +36,16 @@ namespace HabrApiTests
             {
                 foreach (var report in CommentFilterExtensions.GetAllCommentReports())
                 {
-                    var fileName = string.Format(@"E:\{0}.html", report.Key);
                     var query = report.Value(db.Comments).Take(10);
                     var comments = query.ToArray();
-                    File.WriteAllText(fileName, generator.GenerateHtmlReport(comments));
+                    var reportHtml = generator.GenerateHtmlReport(comments);
+                    Assert.IsTrue(reportHtml.Length > 1000);
                 }
             }
         }
 
         [TestMethod]
+        [Ignore]
         public void GenerateIndexTest()
         {
             var links = CommentFilterExtensions.GetAllCommentReports()
@@ -61,7 +62,7 @@ namespace HabrApiTests
                 var bottomComments = db.Comments.OrderBy(c => c.Score).Take(5);
                 var reportHtml = new StatsGenerator().GenerateHtmlReport(topComments.Concat(bottomComments).ToArray());
                 Assert.IsFalse(string.IsNullOrEmpty(reportHtml));
-                File.WriteAllText(@"e:\GenerateTestReport.html", reportHtml);
+                //File.WriteAllText(@"e:\GenerateTestReport.html", reportHtml);
             }
         }
 
@@ -97,6 +98,7 @@ namespace HabrApiTests
             using (var db = HabraStatsEntities.CreateInstance())
             {
                 var ids = db.GetMissingPostIds().ToArray();
+                Assert.IsTrue(ids.Any());
             }
         }
 

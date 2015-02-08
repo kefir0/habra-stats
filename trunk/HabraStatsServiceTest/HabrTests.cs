@@ -44,7 +44,7 @@ namespace HabrApiTests
             var report = sg.GenerateTopCommentStats(posts);
             Assert.IsFalse(string.IsNullOrEmpty(report));
 
-            File.WriteAllText(@"e:\HabrCommentsText.html", report);
+            //File.WriteAllText(@"e:\HabrCommentsText.html", report);
         }
 
         [TestMethod]
