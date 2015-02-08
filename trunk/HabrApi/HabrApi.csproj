@@ -68,6 +68,7 @@
     <Compile Include="WebClientEx.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Content Include="EntityModel\InterestingQueries.sql" />
     <Content Include="EntityModel\HabraStatsDb.sql" />
     <Compile Include="CommentFilterExtensions.cs" />
     <Compile Include="CommentReportAttribute.cs" />
