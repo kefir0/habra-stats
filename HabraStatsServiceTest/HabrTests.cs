@@ -16,7 +16,7 @@ namespace HabrApiTests
         [TestMethod]
         public void TestGetLastPostId()
         {
-            var lastPostId = new Habr().GetLastPostId();
+            var lastPostId = Habr.GetLastPostId();
         }
 
         [TestMethod]
@@ -59,31 +59,30 @@ namespace HabrApiTests
         [Ignore]
         public void LoadRecentPostsIntoDbTest()
         {
-            new Habr().LoadRecentPostsIntoDb();
+            Habr.LoadRecentPostsIntoDb();
         }
 
         [TestMethod]
         public void TestDownloadPost()
         {
             // habr
-            var post = new Habr().DownloadPost(247395);
+            var post = Habr.DownloadPost(247395);
             Assert.IsNotNull(post);
             
             // geekTimes
-            post = new Habr().DownloadPost(245486);
+            post = Habr.DownloadPost(245486);
             Assert.IsNotNull(post);
             
             // megaMozg
-            post = new Habr().DownloadPost(10376);
+            post = Habr.DownloadPost(10376);
             Assert.IsNotNull(post);
         }
 
         private static IEnumerable<Post> GetTestPosts()
         {
             const int maxPostId = 152123;
-            var habr = new Habr();
             var count = 0;
-            foreach (var cachedPost in habr.GetCachedPosts(maxPostId: maxPostId))
+            foreach (var cachedPost in Habr.GetCachedPosts(maxPostId: maxPostId))
             {
                 count++;
                 if (count%100 == 0)

@@ -10,12 +10,12 @@ using HabrApi.EntityModel;
 
 namespace HabrApi
 {
-    public class Habr
+    public static class Habr
     {
         private const string CachePath = @"f:\HabrCache";
         private const double CachePostsOlderThanDays = 6;
 
-        public string DownloadString(string url)
+        public static string DownloadString(string url)
         {
             while (true)
             {
@@ -46,12 +46,12 @@ namespace HabrApi
             }
         }
 
-        public Post DownloadPost(int postId, bool skipComments = false, bool ignoreCache = false)
+        public static Post DownloadPost(int postId, bool skipComments = false, bool ignoreCache = false)
         {
             return Site.Instances.Select(site => DownloadPost(postId, site, skipComments, ignoreCache)).FirstOrDefault(post => post != null);
         }
 
-        public Post DownloadPost(int postId, Site site, bool skipComments = false, bool ignoreCache = false)
+        public static Post DownloadPost(int postId, Site site, bool skipComments = false, bool ignoreCache = false)
         {
             if (site == null)
             {
@@ -84,7 +84,7 @@ namespace HabrApi
             return post;
         }
 
-        public bool IsInCache(int postId)
+        public static bool IsInCache(int postId)
         {
             return Site.Instances.Select(x => x.GetUrl(postId)).Any(url =>
             {
@@ -108,7 +108,7 @@ namespace HabrApi
         /// <summary>
         /// Enumerates all valid posts in cache.
         /// </summary>
-        public IEnumerable<Post> GetCachedPosts(int startPostId = 0, int? maxPostId = null)
+        public static IEnumerable<Post> GetCachedPosts(int startPostId = 0, int? maxPostId = null)
         {
             var lastPostId = maxPostId ?? GetLastPostId();
 
@@ -127,7 +127,7 @@ namespace HabrApi
             }
         }
 
-        public int GetLastPostId(Site site = null)
+        public static int GetLastPostId(Site site = null)
         {
             site = site ?? Site.Instances.First();
             var lastPostHtml = DownloadString(site.Url);
@@ -137,7 +137,7 @@ namespace HabrApi
             return maxId + 5; // compensate error
         }
 
-        public int LoadRecentPostsIntoDb()
+        public static int LoadRecentPostsIntoDb()
         {
             var count = 0;
             foreach (var site in Site.Instances)
@@ -158,7 +158,7 @@ namespace HabrApi
         /// <summary>
         /// Enumerates all posts from newest to oldest.
         /// </summary>
-        private IEnumerable<Post> GetRecentPosts(Site site, bool ignoreCache = false)
+        private static IEnumerable<Post> GetRecentPosts(Site site, bool ignoreCache = false)
         {
             var lastPostId = GetLastPostId(site);
 

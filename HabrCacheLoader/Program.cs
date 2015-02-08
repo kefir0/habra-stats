@@ -17,15 +17,14 @@ namespace HabrCacheLoader
 
         private static void DownloadIntoCache()
         {
-            var habr = new Habr();
-            var lastPostId = habr.GetLastPostId();
+            var lastPostId = Habr.GetLastPostId();
             var startTime = DateTime.Now;
             var loadedCount = 0;
-            var notCachedPosts = Enumerable.Range(1, lastPostId).Where(i => !habr.IsInCache(i)).ToArray();
+            var notCachedPosts = Enumerable.Range(1, lastPostId).Where(i => !Habr.IsInCache(i)).ToArray();
             Console.WriteLine("Posts to load: " + notCachedPosts.Length);
             foreach (var id in notCachedPosts)
             {
-                habr.DownloadPost(id, skipComments: true);
+                Habr.DownloadPost(id, skipComments: true);
                 loadedCount++;
                 var runTime = DateTime.Now - startTime;
                 var postsPerSecond = (loadedCount)/runTime.TotalSeconds;
@@ -36,8 +35,7 @@ namespace HabrCacheLoader
 
         private static void DownloadIntoCacheAndDb()
         {
-            var habr = new Habr();
-            var lastPostId = habr.GetLastPostId();
+            var lastPostId = Habr.GetLastPostId();
             var startTime = DateTime.Now;
             var loadedCount = 0;
             const int startPostId = 249601;
@@ -50,7 +48,7 @@ namespace HabrCacheLoader
             Console.WriteLine("Posts to load: " + notCachedPosts.Length);
             foreach (var id in notCachedPosts)
             {
-                var post = habr.DownloadPost(id, skipComments: false, ignoreCache:true);
+                var post = Habr.DownloadPost(id, skipComments: false, ignoreCache:true);
                 loadedCount++;
 
                 if (post != null)
@@ -71,13 +69,12 @@ namespace HabrCacheLoader
 
         private static void LoadIntoDb()
         {
-            var habr = new Habr();
             var startTime = DateTime.Now;
             var loadedCount = 0;
             var commentCount = new List<int>();
             var startPost = GetMaxSqlPostId() - 200;
 
-            foreach (var p in habr.GetCachedPosts(startPost - 1))
+            foreach (var p in Habr.GetCachedPosts(startPost - 1))
             {
                 loadedCount++;
                 commentCount.Add(p.Comments.Count);
