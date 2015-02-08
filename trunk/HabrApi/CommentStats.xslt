@@ -25,7 +25,7 @@
 
         <!-- Header with selection -->
         <div style="width:80%; margin-left:auto; margin-right:auto;display:block;">
-          <h2 style="display:inline; float:right; margin-top:37px; color: gray;" >Топ комментариев Хабра</h2>
+          <h2 style="display:inline; float:right; margin-top:37px; color: gray;" >Топ комментариев <span style="color: red;">TM</span></h2>
 
           <xsl:for-each select="//ArrayOfCommentReportAttribute">
             <div style="display:inline; float:left; margin-right:30px;">

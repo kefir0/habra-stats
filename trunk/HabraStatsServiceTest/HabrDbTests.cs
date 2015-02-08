@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data.Objects;
 using System.IO;
 using System.Linq;
@@ -90,7 +91,14 @@ namespace HabrApiTests
             }
         }
 
-
+        [TestMethod]
+        public void TestGetMissingPostIds()
+        {
+            using (var db = HabraStatsEntities.CreateInstance())
+            {
+                var ids = db.GetMissingPostIds().ToArray();
+            }
+        }
 
     }
 }

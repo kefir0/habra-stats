@@ -1,4 +1,6 @@
-﻿using System.Globalization;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 namespace HabrApi.EntityModel
@@ -30,6 +32,19 @@ namespace HabrApi.EntityModel
         partial void OnContextCreated()
         {
             CommandTimeout = 60*5;
+        }
+
+        public IEnumerable<int> GetMissingPostIds(int? maxPostId = null)
+        {
+            var ids = new HashSet<int>(Posts.Select(x => x.Id));
+            maxPostId = maxPostId ?? (ids.Any() ? ids.Max() : -1);
+            for (int i = 0; i <= maxPostId; i++)
+            {
+                if (!ids.Contains(i))
+                {
+                    yield return i;
+                }
+            }
         }
     }
 }
