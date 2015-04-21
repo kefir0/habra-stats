@@ -9,4 +9,6 @@ How it works: windows service runs on my home server
 * stores comments in MS SQL Express db
 * generates static HTML content and uploads it to a free web hosting
 
+More info in [my habrahabr.ru post (russian)](http://habrahabr.ru/post/155541/)
+
 And yes, I do use [RegEx to parse HTML](http://stackoverflow.com/questions/1732348/regex-match-open-tags-except-xhtml-self-contained-tags/1732454#1732454), because this project started as a quick-and-dirty LINQPad snippet (LINQPad is amazing, try it!).
